@@ -26,7 +26,7 @@ cat << "BANNER"
 ║                SSH BOT PRO - INSTALADOR COMPLETO            ║
 ║               CON SOLUCIÓN PARA NODE.JS                     ║
 ║               📅 PLANES SEPARADOS                          ║
-║               📢 NOTIFICACIONES                            ║
+║               ⏰ NOTIFICACIONES AL CLIENTE                 ║
 ║               💰 MERCADOPAGO                               ║
 ║               📱 APK POR ARCHIVO                           ║
 ║               🚫 SIN CUPONES                               ║
@@ -40,7 +40,7 @@ echo -e "  📅 Planes DIARIOS: 7, 15 días"
 echo -e "  📅 Planes MENSUALES: 30, 50 días"
 echo -e "  ⏰ Test gratuito: 2 horas"
 echo -e "  🔐 Contraseña fija: mgvpn247"
-echo -e "  📢 Sistema de notificaciones"
+echo -e "  ⏰ Sistema de notificaciones al cliente"
 echo -e "  💰 MercadoPago integrado"
 echo -e "  📱 APK enviada como archivo"
 echo -e "  🚫 Sin cupones de descuento"
@@ -180,25 +180,11 @@ main_installation() {
 
     echo -e "${GREEN}✅ IP detectada: ${CYAN}$SERVER_IP${NC}\n"
     
-    # Solicitar grupo de notificaciones
-    echo -e "${YELLOW}📢 CONFIGURACIÓN DE NOTIFICACIONES${NC}"
-    echo -e "${CYAN}Ingresa el ID del grupo de WhatsApp para notificaciones${NC}"
-    echo -e "Ejemplo: 1234567890-123456@g.us"
-    echo -e "Deja vacío si no quieres notificaciones en grupo\n"
-    
-    read -p "ID del grupo para notificaciones: " NOTIFICATION_GROUP
-    
-    if [[ -n "$NOTIFICATION_GROUP" ]]; then
-        echo -e "${GREEN}✅ Grupo configurado: ${CYAN}$NOTIFICATION_GROUP${NC}"
-    else
-        echo -e "${YELLOW}⚠️ Notificaciones en grupo desactivadas${NC}"
-    fi
-    
     # Confirmar instalación
     echo -e "\n${YELLOW}⚠️  ESTE INSTALADOR HARÁ:${NC}"
     echo -e "   • Instalar dependencias del sistema"
     echo -e "   • Crear SSH Bot Pro con planes separados"
-    echo -e "   • Sistema de notificaciones automáticas"
+    echo -e "   • Sistema de notificaciones automáticas AL CLIENTE"
     echo -e "   • Menú: 1=Prueba, 2=Comprar, 3=Renovar, 4=APP"
     echo -e "   • Planes DIARIOS: 7, 15 días"
     echo -e "   • Planes MENSUALES: 30, 50 días"
@@ -208,6 +194,7 @@ main_installation() {
     echo -e "   • APK enviada como archivo"
     echo -e "   • Sin cupones de descuento"
     echo -e "   • Panel de control completo"
+    echo -e "   • Notificaciones de vencimiento al cliente"
     
     read -p "$(echo -e "${YELLOW}¿Continuar con la instalación? (s/N): ${NC}")" -n 1 -r
     echo
@@ -285,8 +272,7 @@ main_installation() {
         "name": "SSH Bot Pro",
         "version": "1.0-COMPLETO",
         "server_ip": "$SERVER_IP",
-        "default_password": "mgvpn247",
-        "notification_group": "$NOTIFICATION_GROUP"
+        "default_password": "mgvpn247"
     },
     "prices": {
         "test_hours": 2,
@@ -307,7 +293,7 @@ main_installation() {
     "apk": {
         "path": "$APK_DIR/app.apk",
         "filename": "MGVPN.apk",
-        "caption": "📱 MGVPN - Cliente SSH Premium\n\n🔐 Contraseña: mgvpn247\n📍 IP: $SERVER_IP\n\n💡 Instrucciones:\n1. Permite instalación de fuentes desconocidas\n2. Instala la aplicación\n3. Configura con tus credenciales SSH"
+        "caption": "📱 MGVPN - Cliente SSH Premium\n\n💡 Instrucciones:\n1. Permite instalación de fuentes desconocidas\n2. Instala la aplicación\n3. Configura con tus credenciales SSH"
     },
     "links": {
         "tutorial": "https://youtube.com",
@@ -454,7 +440,7 @@ console.log(chalk.green('✅ Sistema de planes separados'));
 console.log(chalk.green('✅ Planes DIARIOS: 7, 15 días'));
 console.log(chalk.green('✅ Planes MENSUALES: 30, 50 días'));
 console.log(chalk.green('✅ Test: 2 horas'));
-console.log(chalk.green('✅ Sistema de notificaciones'));
+console.log(chalk.green('✅ Sistema de notificaciones al cliente'));
 console.log(chalk.green('✅ APK por archivo'));
 console.log(chalk.red('🚫 Sin cupones de descuento\n'));
 
@@ -567,6 +553,34 @@ ${config.links.support}`, { sendSeen: false });
     }
 }
 
+// Enviar notificación de vencimiento
+async function sendExpiryNotification(phone, username, expiryDate, hoursLeft) {
+    try {
+        const expiryFormatted = moment(expiryDate).format('DD/MM/YYYY HH:mm');
+        
+        let message = `⏰ *RECORDATORIO DE VENCIMIENTO*\n\n`;
+        message += `👤 Usuario: *${username}*\n`;
+        message += `⏰ Vence en: *${expiryFormatted}*\n`;
+        message += `⏳ Tiempo restante: *${hoursLeft} horas*\n\n`;
+        message += `⚠️ Tu cuenta está por vencer. Renueva ahora para continuar disfrutando del servicio.\n\n`;
+        message += `Para renovar, selecciona la opción:\n`;
+        message += `🔄 3 - RENOVAR USUARIO SSH\n\n`;
+        message += `O contacta soporte:\n`;
+        message += `${config.links.support}`;
+        
+        await client.sendMessage(phone, message, { sendSeen: false });
+        console.log(chalk.yellow(`📢 Notificación enviada a ${phone.split('@')[0]} - Usuario: ${username}`));
+        
+        // Marcar como notificado
+        db.run('UPDATE users SET notification_sent = 1 WHERE username = ?', [username]);
+        
+        return true;
+    } catch (error) {
+        console.error('❌ Error enviando notificación:', error);
+        return false;
+    }
+}
+
 // Planes disponibles
 const dailyPlans = {
     '7': { days: 7, amountKey: 'price_7d_1conn', name: '7 DÍAS' },
@@ -635,10 +649,7 @@ Elija una opción:
 🧾 1 - CREAR PRUEBA (${config.prices.test_hours} HORAS)
 💰 2 - COMPRAR USUARIO SSH
 🔄 3 - RENOVAR USUARIO SSH
-📱 4 - DESCARGAR APLICACIÓN
-
-🔐 Contraseña: ${config.bot.default_password}
-📍 IP: ${config.bot.server_ip}`, { sendSeen: false });
+📱 4 - DESCARGAR APLICACIÓN`, { sendSeen: false });
     }
     // OPCIÓN 1: PRUEBA
     else if (text === '1' && userState.state === 'main_menu') {
@@ -664,7 +675,7 @@ Elija una opción:
 ⏰ Expira en: ${config.prices.test_hours} horas
 🔌 Conexiones: 1 dispositivo
 
-📱 *APP:* ${config.links.app_download}
+📱 *APP:* Descarga desde la opción 4
 
 ¡Disfruta tu prueba! 🚀`, { sendSeen: false });
             
@@ -679,8 +690,8 @@ Elija una opción:
         await client.sendMessage(phone, `PLANES SSH PREMIUM !
 
 Elija una opción:
-🗓 1 - PLANES SSH DIARIOS
-🗓 2 - PLANES SSH MENSUALES
+🗓 1 - PLANES SSH DIARIOS (7, 15 DÍAS)
+🗓 2 - PLANES SSH MENSUALES (30, 50 DÍAS)
 ⬅️ 0 - VOLVER`, { sendSeen: false });
     }
     // SUBMENÚ COMPRAS
@@ -746,8 +757,8 @@ ${config.links.support}`, { sendSeen: false });
             await client.sendMessage(phone, `PLANES SSH PREMIUM !
 
 Elija una opción:
-🗓 1 - PLANES SSH DIARIOS
-🗓 2 - PLANES SSH MENSUALES
+🗓 1 - PLANES SSH DIARIOS (7, 15 DÍAS)
+🗓 2 - PLANES SSH MENSUALES (30, 50 DÍAS)
 ⬅️ 0 - VOLVER`, { sendSeen: false });
         }
     }
@@ -783,8 +794,8 @@ ${config.links.support}`, { sendSeen: false });
             await client.sendMessage(phone, `PLANES SSH PREMIUM !
 
 Elija una opción:
-🗓 1 - PLANES SSH DIARIOS
-🗓 2 - PLANES SSH MENSUALES
+🗓 1 - PLANES SSH DIARIOS (7, 15 DÍAS)
+🗓 2 - PLANES SSH MENSUALES (30, 50 DÍAS)
 ⬅️ 0 - VOLVER`, { sendSeen: false });
         }
     }
@@ -835,23 +846,77 @@ Contraseña: ${config.bot.default_password}`, { sendSeen: false });
     }
 });
 
+// Función para verificar vencimientos y enviar notificaciones
+async function checkExpiryNotifications() {
+    console.log(chalk.yellow('🔔 Verificando usuarios por vencer...'));
+    
+    const warningHours = config.notifications.expiry_warning_hours || 24;
+    
+    db.all(`
+        SELECT phone, username, expires_at 
+        FROM users 
+        WHERE status = 1 
+        AND tipo = 'premium'
+        AND notification_sent = 0
+        AND expires_at <= datetime('now', ?)
+        AND expires_at > datetime('now')
+    `, [`+${warningHours} hours`], async (err, rows) => {
+        if (err) {
+            console.error('❌ Error verificando vencimientos:', err.message);
+            return;
+        }
+        
+        if (rows && rows.length > 0) {
+            console.log(chalk.cyan(`📢 ${rows.length} usuarios por vencer en ${warningHours} horas`));
+            
+            for (const row of rows) {
+                const hoursLeft = Math.ceil((new Date(row.expires_at) - new Date()) / (1000 * 60 * 60));
+                
+                if (hoursLeft <= warningHours && hoursLeft > 0) {
+                    await sendExpiryNotification(row.phone, row.username, row.expires_at, hoursLeft);
+                    
+                    // Pequeña pausa para no saturar WhatsApp
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            }
+        }
+    });
+}
+
 // Limpiar usuarios expirados cada 15 minutos
 cron.schedule('*/15 * * * *', async () => {
     const now = moment().format('YYYY-MM-DD HH:mm:ss');
     console.log(chalk.yellow(`🧹 Limpiando usuarios expirados... (${now})`));
     
-    db.all('SELECT username FROM users WHERE expires_at < ? AND status = 1', [now], async (err, rows) => {
+    db.all('SELECT username, phone FROM users WHERE expires_at < ? AND status = 1', [now], async (err, rows) => {
         if (err || !rows || rows.length === 0) return;
         
         for (const r of rows) {
             try {
+                // Enviar notificación de expiración
+                await client.sendMessage(r.phone, `❌ *TU CUENTA HA EXPIRADO*\n\n👤 Usuario: *${r.username}*\n⏰ Tu cuenta ha vencido.\n\nPara renovar, selecciona la opción:\n🔄 3 - RENOVAR USUARIO SSH\n\nO contacta soporte:\n${config.links.support}`, { sendSeen: false });
+                
+                // Eliminar usuario del sistema
                 await execPromise(`pkill -u ${r.username} 2>/dev/null || true`);
                 await execPromise(`userdel -f ${r.username} 2>/dev/null || true`);
+                
+                // Actualizar estado en BD
                 db.run('UPDATE users SET status = 0 WHERE username = ?', [r.username]);
                 console.log(chalk.green(`🗑️ Eliminado: ${r.username}`));
-            } catch (e) {}
+                
+                // Pequeña pausa
+                await new Promise(resolve => setTimeout(resolve, 500));
+            } catch (e) {
+                console.error(`❌ Error eliminando ${r.username}:`, e.message);
+            }
         }
     });
+});
+
+// Verificar notificaciones cada hora
+cron.schedule('0 * * * *', () => {
+    console.log(chalk.cyan('⏰ Verificando notificaciones de vencimiento...'));
+    checkExpiryNotifications();
 });
 
 // Inicializar bot
@@ -994,11 +1059,14 @@ while true; do
         MP_STATUS="${RED}❌ NO CONFIGURADO${NC}"
     fi
     
-    NOTIF_GROUP=$(get_val '.bot.notification_group')
-    if [[ -n "$NOTIF_GROUP" && "$NOTIF_GROUP" != "" && "$NOTIF_GROUP" != "null" ]]; then
-        GROUP_STATUS="${GREEN}✅ CONFIGURADO${NC}"
+    NOTIF_ENABLED=$(get_val '.notifications.enabled')
+    if [[ "$NOTIF_ENABLED" == "true" ]]; then
+        NOTIF_STATUS="${GREEN}✅ ACTIVADAS${NC}"
+        NOTIF_HOURS=$(get_val '.notifications.expiry_warning_hours')
+        NOTIF_DETAIL="${GREEN}(${NOTIF_HOURS}h antes)${NC}"
     else
-        GROUP_STATUS="${RED}❌ NO CONFIGURADO${NC}"
+        NOTIF_STATUS="${RED}❌ DESACTIVADAS${NC}"
+        NOTIF_DETAIL=""
     fi
     
     # Verificar APK
@@ -1020,7 +1088,7 @@ while true; do
     echo -e "  Bot: $BOT_STATUS"
     echo -e "  Usuarios: ${CYAN}$ACTIVE_USERS/$TOTAL_USERS${NC} activos/total"
     echo -e "  MercadoPago: $MP_STATUS"
-    echo -e "  Grupo notif.: $GROUP_STATUS"
+    echo -e "  Notificaciones al cliente: $NOTIF_STATUS $NOTIF_DETAIL"
     echo -e "  APK: $APK_STATUS"
     echo -e "  Test: ${GREEN}$(get_val '.prices.test_hours') horas${NC}"
     echo -e "  Contraseña: ${GREEN}$(get_val '.bot.default_password')${NC}"
@@ -1045,7 +1113,7 @@ while true; do
     echo -e "${CYAN}[6]${NC}  ⏰  Cambiar horas del test"
     echo -e "${CYAN}[7]${NC}  💰  Cambiar precios"
     echo -e "${CYAN}[8]${NC}  🔑  Configurar MercadoPago"
-    echo -e "${CYAN}[9]${NC}  📢  Configurar notificaciones"
+    echo -e "${CYAN}[9]${NC}  ⏰  Configurar notificaciones al cliente"
     echo -e "${CYAN}[10]${NC} 📁  Subir/Ver APK"
     echo -e "${CYAN}[11]${NC} 📊  Ver estadísticas"
     echo -e "${CYAN}[12]${NC} 📝  Ver logs"
@@ -1152,7 +1220,7 @@ while true; do
             read -p "Nuevas horas para el test [${CURRENT_HOURS}]: " NEW_HOURS
             
             if [[ -n "$NEW_HOURS" ]]; then
-                if [[ $NEW_HOURS =~ ^[0-9]+$ ]] && [[ $NEW_HOURs -ge 1 ]] && [[ $NEW_HOURS -le 24 ]]; then
+                if [[ $NEW_HOURS =~ ^[0-9]+$ ]] && [[ $NEW_HOURS -ge 1 ]] && [[ $NEW_HOURS -le 24 ]]; then
                     set_val '.prices.test_hours' "$NEW_HOURS"
                     echo -e "\n${GREEN}✅ Horas cambiadas a ${NEW_HOURS} horas${NC}"
                     echo -e "${YELLOW}🔄 Reiniciando bot...${NC}"
@@ -1242,28 +1310,33 @@ while true; do
         9)
             clear
             echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
-            echo -e "${CYAN}║             📢 CONFIGURAR NOTIFICACIONES                   ║${NC}"
+            echo -e "${CYAN}║        ⏰ CONFIGURAR NOTIFICACIONES AL CLIENTE            ║${NC}"
             echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}\n"
             
-            CURRENT_GROUP=$(get_val '.bot.notification_group')
+            CURRENT_ENABLED=$(get_val '.notifications.enabled')
             CURRENT_WARNING=$(get_val '.notifications.expiry_warning_hours')
             
             echo -e "${YELLOW}⚙️ CONFIGURACIÓN ACTUAL:${NC}"
-            echo -e "  Grupo WhatsApp: ${CYAN}${CURRENT_GROUP:-'No configurado'}${NC}"
+            echo -e "  Notificaciones: ${CYAN}$([[ "$CURRENT_ENABLED" == "true" ]] && echo "ACTIVADAS" || echo "DESACTIVADAS")${NC}"
             echo -e "  Aviso por vencer: ${CYAN}${CURRENT_WARNING} horas antes${NC}\n"
             
-            read -p "Nuevo ID de grupo [${CURRENT_GROUP}]: " NEW_GROUP
-            read -p "Horas para aviso por vencer [${CURRENT_WARNING}]: " NEW_WARNING
-            
-            if [[ -n "$NEW_GROUP" ]]; then
-                set_val '.bot.notification_group' "\"$NEW_GROUP\""
-                echo -e "${GREEN}✅ Grupo actualizado${NC}"
+            read -p "¿Activar notificaciones al cliente? (s/N): " ENABLE
+            if [[ "$ENABLE" == "s" ]]; then
+                set_val '.notifications.enabled' "true"
+                echo -e "${GREEN}✅ Notificaciones activadas${NC}"
+            else
+                set_val '.notifications.enabled' "false"
+                echo -e "${YELLOW}⚠️ Notificaciones desactivadas${NC}"
             fi
+            
+            echo -e "\n${CYAN}⏰ Configurar horas para aviso de vencimiento:${NC}"
+            echo -e "Ejemplo: 24 (avisa 24 horas antes de vencer)"
+            read -p "Horas para aviso por vencer [${CURRENT_WARNING}]: " NEW_WARNING
             
             if [[ -n "$NEW_WARNING" ]]; then
                 if [[ $NEW_WARNING =~ ^[0-9]+$ ]] && [[ $NEW_WARNING -ge 1 ]] && [[ $NEW_WARNING -le 168 ]]; then
                     set_val '.notifications.expiry_warning_hours' "$NEW_WARNING"
-                    echo -e "${GREEN}✅ Aviso por vencer actualizado a ${NEW_WARNING} horas${NC}"
+                    echo -e "${GREEN}✅ Aviso por vencer actualizado a ${NEW_WARNING} horas antes${NC}"
                 else
                     echo -e "${RED}❌ Error: Debe ser un número entre 1 y 168 (7 días)${NC}"
                 fi
@@ -1412,6 +1485,7 @@ UPLOADEOP
 ║                                                              ║
 ║       🎉 INSTALACIÓN COMPLETADA - VERSIÓN COMPLETA 🎉      ║
 ║                📱 CON APK POR ARCHIVO                       ║
+║                ⏰ CON NOTIFICACIONES AL CLIENTE             ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 FINAL
@@ -1423,6 +1497,7 @@ FINAL
     echo -e "${GREEN}✅ Test: 2 horas por defecto${NC}"
     echo -e "${GREEN}✅ Contraseña: mgvpn247 (fija)${NC}"
     echo -e "${GREEN}✅ APK enviada como archivo${NC}"
+    echo -e "${GREEN}✅ Notificaciones al cliente activadas${NC}"
     echo -e "${RED}🚫 Cupones de descuento desactivados${NC}"
     echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}\n"
     
@@ -1445,8 +1520,8 @@ FINAL
     echo -e "  3. Escanea el QR con tu teléfono"
     echo -e "  4. Envía 'menu' al bot para probar"
     echo -e "  5. Opción ${CYAN}[10]${NC} - Subir APK"
-    echo -e "  6. Opción ${CYAN}[8]${NC} - Configurar MercadoPago (opcional)"
-    echo -e "  7. Opción ${CYAN}[9]${NC} - Configurar notificaciones (opcional)\n"
+    echo -e "  6. Opción ${CYAN}[9]${NC} - Configurar notificaciones al cliente"
+    echo -e "  7. Opción ${CYAN}[8]${NC} - Configurar MercadoPago (opcional)\n"
     
     echo -e "${YELLOW}💰 PRECIOS POR DEFECTO:${NC}\n"
     echo -e "  Test: ${GREEN}2 horas (gratis)${NC}"
@@ -1460,10 +1535,14 @@ FINAL
     echo -e "${YELLOW}📍 INFORMACIÓN:${NC}"
     echo -e "  IP: ${CYAN}$SERVER_IP${NC}"
     echo -e "  BD: ${CYAN}/opt/ssh-bot/data/users.db${NC}"
-    echo -e "  Config: ${CYAn}/opt/ssh-bot/config/config.json${NC}"
+    echo -e "  Config: ${CYAN}/opt/ssh-bot/config/config.json${NC}"
     echo -e "  APK: ${CYAN}/opt/ssh-bot/apk/app.apk${NC}"
     echo -e "  Bot: ${CYAN}/root/ssh-bot/${NC}"
     echo -e "  QR: ${CYAN}/root/qr-whatsapp.png${NC}\n"
+    
+    echo -e "${YELLOW}⏰ NOTIFICACIONES:${NC}"
+    echo -e "  El bot enviará notificaciones automáticas al cliente cuando su cuenta esté por vencer (24h antes por defecto)"
+    echo -e "  Puedes configurar las horas desde el panel: ${GREEN}sshbot${NC} → Opción ${CYAN}[9]${NC}\n"
     
     echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}\n"
 }
