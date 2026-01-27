@@ -293,7 +293,7 @@ main_installation() {
     "apk": {
         "path": "$APK_DIR/app.apk",
         "filename": "MGVPN.apk",
-        "caption": "📱 MGVPN - APK\n\n💡 Instrucciones:\n1. Descarga la app click en mas detalles\n2. Instalar de todas formas\n3. Una vez instalada necesita internet para actualizar la apk"
+        "caption": "📱 MGVPN - APP\n\n💡 Instrucciones:\n1. Descarga la app abrir click en mas detalles\n2. Instalar de todas formas\n3. Una vez instalada necesita internet para actualizar la app"
     },
     "links": {
         "tutorial": "https://youtube.com",
@@ -826,12 +826,12 @@ Para crear una nueva cuenta, selecciona:
     else if (text === '4' && userState.state === 'main_menu') {
         await client.sendMessage(phone, `📱 *DESCARGANDO APLICACIÓN...*
 
-⏳ Buscando archivo APK...`, { sendSeen: false });
+⏳ Buscando archivo APP...`, { sendSeen: false });
         
         const apkSent = await sendAPK(phone);
         
         if (apkSent) {
-            await client.sendMessage(phone, `✅ *APK ENVIADA CON ÉXITO*
+            await client.sendMessage(phone, `✅ *APP ENVIADA CON ÉXITO*
 
 📁 *Nombre:* ${config.apk.filename}
 💡 *Instrucciones:*
