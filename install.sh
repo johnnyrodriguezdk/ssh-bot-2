@@ -835,13 +835,11 @@ Para crear una nueva cuenta, selecciona:
 
 📁 *Nombre:* ${config.apk.filename}
 💡 *Instrucciones:*
-1. Abrir apk click en mas detalles
+1. Abrir app click en mas detalles
 2. Instalar de todas formas
 3. Una vez instalada necesitara internet para actualizarce
 
-🔐 *Credenciales:*
-Usuario: (el que te proporcionamos)
-Contraseña: ${config.bot.default_password}`, { sendSeen: false });
+
         }
     }
 });
