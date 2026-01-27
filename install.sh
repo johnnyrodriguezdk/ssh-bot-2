@@ -1,6 +1,6 @@
 #!/bin/bash
 # ================================================
-# SSH BOT PRO - INSTALADOR COMPLETO CON SOLUCIÓN NODE.JS
+# BOT MG VPN - INSTALADOR COMPLETO CON SOLUCIÓN NODE.JS
 # Versión completa con planes separados, notificaciones, MercadoPago
 # CON ENVÍO DE APK POR ARCHIVO
 # ================================================
@@ -23,7 +23,7 @@ echo -e "${CYAN}${BOLD}"
 cat << "BANNER"
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║                SSH BOT PRO - INSTALADOR COMPLETO            ║
+║                BOT MG VPN - INSTALADOR COMPLETO            ║
 ║               CON SOLUCIÓN PARA NODE.JS                     ║
 ║               📅 PLANES SEPARADOS                          ║
 ║               ⏰ NOTIFICACIONES AL CLIENTE                 ║
@@ -293,7 +293,7 @@ main_installation() {
     "apk": {
         "path": "$APK_DIR/app.apk",
         "filename": "MGVPN.apk",
-        "caption": "📱 MGVPN - Cliente SSH Premium\n\n💡 Instrucciones:\n1. Permite instalación de fuentes desconocidas\n2. Instala la aplicación\n3. Configura con tus credenciales SSH"
+        "caption": "📱 MGVPN - Cliente SSH Premium\n\n💡 Instrucciones:\n1. Descarga la app click en mas detalles\n2. Instalar de todas formar\n3. Configura con tus credenciales SSH"
     },
     "links": {
         "tutorial": "https://youtube.com",
