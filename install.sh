@@ -293,7 +293,7 @@ main_installation() {
     "apk": {
         "path": "$APK_DIR/app.apk",
         "filename": "MGVPN.apk",
-        "caption": "📱 MGVPN - Cliente SSH Premium\n\n💡 Instrucciones:\n1. Descarga la app click en mas detalles\n2. Instalar de todas formar\n3. Configura con tus credenciales SSH"
+        "caption": "📱 MGVPN - APK\n\n💡 Instrucciones:\n1. Descarga la app click en mas detalles\n2. Instalar de todas formas\n3. Una vez instalada necesita internet para actualizar la apk"
     },
     "links": {
         "tutorial": "https://youtube.com",
@@ -690,8 +690,8 @@ Elija una opción:
         await client.sendMessage(phone, `PLANES SSH PREMIUM !
 
 Elija una opción:
-🗓 1 - PLANES SSH DIARIOS (7, 15 DÍAS)
-🗓 2 - PLANES SSH MENSUALES (30, 50 DÍAS)
+🗓 1 - PLANES SSH DIARIOS
+🗓 2 - PLANES SSH MENSUALES
 ⬅️ 0 - VOLVER`, { sendSeen: false });
     }
     // SUBMENÚ COMPRAS
@@ -757,8 +757,8 @@ ${config.links.support}`, { sendSeen: false });
             await client.sendMessage(phone, `PLANES SSH PREMIUM !
 
 Elija una opción:
-🗓 1 - PLANES SSH DIARIOS (7, 15 DÍAS)
-🗓 2 - PLANES SSH MENSUALES (30, 50 DÍAS)
+🗓 1 - PLANES SSH DIARIOS
+🗓 2 - PLANES SSH MENSUALES
 ⬅️ 0 - VOLVER`, { sendSeen: false });
         }
     }
@@ -794,8 +794,8 @@ ${config.links.support}`, { sendSeen: false });
             await client.sendMessage(phone, `PLANES SSH PREMIUM !
 
 Elija una opción:
-🗓 1 - PLANES SSH DIARIOS (7, 15 DÍAS)
-🗓 2 - PLANES SSH MENSUALES (30, 50 DÍAS)
+🗓 1 - PLANES SSH DIARIOS
+🗓 2 - PLANES SSH MENSUALES
 ⬅️ 0 - VOLVER`, { sendSeen: false });
         }
     }
@@ -835,9 +835,9 @@ Para crear una nueva cuenta, selecciona:
 
 📁 *Nombre:* ${config.apk.filename}
 💡 *Instrucciones:*
-1. Permite instalación de fuentes desconocidas
-2. Instala la aplicación
-3. Configura con tus credenciales SSH
+1. Abrir apk click en mas detalles
+2. Instalar de todas formas
+3. Una vez instalada necesitara internet para actualizarce
 
 🔐 *Credenciales:*
 Usuario: (el que te proporcionamos)
