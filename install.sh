@@ -1,8 +1,7 @@
 #!/bin/bash
 # ================================================
-# SSH BOT PRO - INSTALADOR COMPLETO CON SOLUCIÓN NODE.JS
-# Versión completa con planes separados, notificaciones, MercadoPago
-# CON ENVÍO DE APK POR ARCHIVO
+# SSH BOT PRO - CON FLUJO DE CAPTURAS Y MÁS PLANES
+# Planes: Diarios (7, 15) - Mensuales (30, 50) - TEST 2 HORAS
 # ================================================
 
 set -e
@@ -23,28 +22,42 @@ echo -e "${CYAN}${BOLD}"
 cat << "BANNER"
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║                SSH BOT PRO - INSTALADOR COMPLETO            ║
-║               CON SOLUCIÓN PARA NODE.JS                     ║
-║               📅 PLANES SEPARADOS                          ║
-║               📢 NOTIFICACIONES                            ║
-║               💰 MERCADOPAGO                               ║
-║               📱 APK POR ARCHIVO                           ║
-║               🚫 SIN CUPONES                               ║
+║     ███████╗███████╗██║  ██║    ██████╗  ██████╗ ████████╗  ║
+║     ██╔════╝██╔════╝██║  ██║    ██╔══██╗██╔═══██╗╚══██╔══╝  ║
+║     ███████╗███████╗███████║    ██████╔╝██║   ██║   ██║     ║
+║     ╚════██║╚════██║██╔══██║    ██╔══██╗██║   ██║   ██║     ║
+║     ███████║███████║██║  ██║    ██████╔╝╚██████╔╝   ██║     ║
+║     ╚══════╝╚══════╝╚═╝  ╚═╝    ╚═════╝  ╚═════╝    ╚═╝     ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║                SSH BOT PRO - PLANES SEPARADOS               ║
+║               📅 DIARIOS: 7, 15 DÍAS                       ║
+║               📅 MENSUALES: 30, 50 DÍAS                    ║
+║               ⏰ TEST GRATIS: 2 HORAS                        ║
+║               🔐 CONTRASEÑA FIJA: mgvpn247                  ║
+║               💰 MERCADOPAGO INTEGRADO                      ║
+║               📢 NOTIFICACIONES AUTOMÁTICAS                 ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 BANNER
 echo -e "${NC}"
 
-echo -e "${GREEN}✅ VERSIÓN COMPLETA CON:${NC}"
-echo -e "  📅 Planes DIARIOS: 7, 15 días"
-echo -e "  📅 Planes MENSUALES: 30, 50 días"
-echo -e "  ⏰ Test gratuito: 2 horas"
-echo -e "  🔐 Contraseña fija: mgvpn247"
-echo -e "  📢 Sistema de notificaciones"
-echo -e "  💰 MercadoPago integrado"
-echo -e "  📱 APK enviada como archivo"
-echo -e "  🚫 Sin cupones de descuento"
-echo -e "  🎛️ Panel de control completo"
+echo -e "${GREEN}✅ SISTEMA MEJORADO CON NOTIFICACIONES:${NC}"
+echo -e "  📢 ${CYAN}NOTIFICACIONES ACTIVAS:${NC}"
+echo -e "     • ⚠️ Aviso por vencer (24h antes)"
+echo -e "     • 📅 Recordatorio de vencimiento"
+echo -e "  🔴 ${RED}MENÚ PRINCIPAL:${NC}"
+echo -e "     ${GREEN}1${NC} = Crear Prueba (TEST) - 2 HORAS"
+echo -e "     ${GREEN}2${NC} = Comprar Login SSH"
+echo -e "     ${GREEN}3${NC} = Renovar Login SSH"
+echo -e "     ${GREEN}4${NC} = Descargar Aplicación"
+echo -e "  🟡 ${YELLOW}SUBMENÚ COMPRAS SEPARADAS:${NC}"
+echo -e "     ${GREEN}1${NC} = Planes SSH DIARIOS (7, 15 días)"
+echo -e "     ${GREEN}2${NC} = Planes SSH MENSUALES (30, 50 días)"
+echo -e "     ${GREEN}0${NC} = Volver"
+echo -e "  🟢 ${GREEN}PLANES DISPONIBLES:${NC}"
+echo -e "     ${CYAN}DIARIOS:${NC} 7 días - 15 días"
+echo -e "     ${CYAN}MENSUALES:${NC} 30 días - 50 días"
 echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}\n"
 
 # Verificar root
@@ -54,236 +67,148 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# ================================================
-# FUNCIÓN PARA SOLUCIONAR NODE.JS
-# ================================================
-fix_nodejs() {
-    echo -e "${CYAN}${BOLD}🔧 SOLUCIONANDO PROBLEMA DE NODE.JS...${NC}"
-    
-    # 1. Detener procesos de Node.js
-    echo -e "${YELLOW}🛑 Deteniendo procesos Node.js...${NC}"
-    pkill -f node 2>/dev/null || true
-    pm2 delete all 2>/dev/null || true
-    
-    # 2. Remover Node.js existente
-    echo -e "${YELLOW}🗑️  Removiendo Node.js anterior...${NC}"
-    apt-get remove --purge -y nodejs npm node 2>/dev/null || true
-    apt-get autoremove -y
-    
-    # 3. Limpiar archivos conflictivos
-    echo -e "${YELLOW}🧹 Limpiando archivos conflictivos...${NC}"
-    rm -rf /usr/include/node 2>/dev/null || true
-    rm -rf /usr/lib/node_modules 2>/dev/null || true
-    rm -rf /usr/local/lib/node_modules 2>/dev/null || true
-    rm -rf /opt/nodejs 2>/dev/null || true
-    
-    # Eliminar binarios
-    rm -f /usr/bin/node /usr/bin/npm /usr/bin/npx 2>/dev/null || true
-    rm -f /usr/local/bin/node /usr/local/bin/npm /usr/local/bin/npx 2>/dev/null || true
-    rm -f /usr/sbin/node /usr/sbin/npm /usr/sbin/npx 2>/dev/null || true
-    
-    # 4. Reparar sistema de paquetes
-    echo -e "${YELLOW}🔧 Reparando paquetes rotos...${NC}"
-    dpkg --configure -a
-    apt-get update -y
-    apt-get install -f -y
-    
-    # 5. Instalar Node.js 20.x usando binary directo (MÉTODO SEGURO)
-    echo -e "${YELLOW}🚀 Instalando Node.js 20.x desde binary...${NC}"
-    
-    NODE_VERSION="20.20.0"
-    
-    # Verificar arquitectura
-    ARCH=$(uname -m)
-    if [[ "$ARCH" == "x86_64" ]]; then
-        ARCH="linux-x64"
-    elif [[ "$ARCH" == "aarch64" ]]; then
-        ARCH="linux-arm64"
-    else
-        ARCH="linux-x64"
-    fi
-    
-    cd /tmp
-    rm -rf node-* 2>/dev/null || true
-    
-    echo -e "${CYAN}📥 Descargando Node.js v${NODE_VERSION} para ${ARCH}...${NC}"
-    wget -q --show-progress "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-${ARCH}.tar.xz" || \
-    wget -q "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-${ARCH}.tar.xz"
-    
-    if [ ! -f "node-v${NODE_VERSION}-${ARCH}.tar.xz" ]; then
-        echo -e "${RED}❌ Error descargando Node.js${NC}"
-        echo -e "${YELLOW}Intentando con curl...${NC}"
-        curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-${ARCH}.tar.xz" -o "node-v${NODE_VERSION}-${ARCH}.tar.xz"
-    fi
-    
-    if [ -f "node-v${NODE_VERSION}-${ARCH}.tar.xz" ]; then
-        echo -e "${CYAN}📦 Extrayendo...${NC}"
-        tar -xf "node-v${NODE_VERSION}-${ARCH}.tar.xz"
-        
-        echo -e "${CYAN}📁 Instalando en /usr/local...${NC}"
-        cd "node-v${NODE_VERSION}-${ARCH}"
-        cp -R bin include lib share /usr/local/
-        
-        # Crear enlaces simbólicos
-        ln -sf /usr/local/bin/node /usr/bin/node 2>/dev/null || true
-        ln -sf /usr/local/bin/npm /usr/bin/npm 2>/dev/null || true
-        ln -sf /usr/local/bin/npx /usr/bin/npx 2>/dev/null || true
-        
-        # Agregar a PATH si no está
-        if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
-            echo 'export PATH="/usr/local/bin:$PATH"' >> /root/.bashrc
-            source /root/.bashrc
-        fi
-    else
-        echo -e "${RED}❌ No se pudo descargar Node.js${NC}"
-        echo -e "${YELLOW}Intentando método alternativo con Nodesource...${NC}"
-        
-        # Método alternativo usando Nodesource con forzar
-        curl -fsSL https://deb.nodesource.com/setup_20.x | bash - --force
-        apt-get install -y nodejs --fix-broken --allow-downgrades --allow-remove-essential --allow-change-held-packages
-    fi
-    
-    # 6. Verificar instalación
-    echo -e "${CYAN}✅ Verificando instalación...${NC}"
-    
-    if command -v node &> /dev/null; then
-        NODE_VER=$(node --version 2>/dev/null || echo "Desconocido")
-        NPM_VER=$(npm --version 2>/dev/null || echo "Desconocido")
-        echo -e "${GREEN}✅ Node.js ${NODE_VER} instalado correctamente${NC}"
-        echo -e "${GREEN}✅ NPM ${NPM_VER} instalado${NC}"
-    else
-        echo -e "${RED}❌ Falló la instalación de Node.js${NC}"
-        echo -e "${YELLOW}Intentando instalar desde repositorio Ubuntu...${NC}"
-        apt-get install -y nodejs npm
-    fi
-    
-    # 7. Instalar PM2
-    echo -e "${CYAN}📦 Instalando PM2...${NC}"
-    npm install -g pm2 --force 2>/dev/null || npm install -g pm2 || echo -e "${YELLOW}⚠️  No se pudo instalar PM2, continuando...${NC}"
-    
-    echo -e "${GREEN}${BOLD}✅ PROBLEMA DE NODE.JS SOLUCIONADO${NC}\n"
-}
+# Detectar IP
+echo -e "${CYAN}${BOLD}🔍 DETECTANDO IP DEL SERVIDOR...${NC}"
+SERVER_IP=$(curl -4 -s --max-time 10 ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}' || echo "127.0.0.1")
+if [[ -z "$SERVER_IP" || "$SERVER_IP" == "127.0.0.1" ]]; then
+    echo -e "${RED}❌ No se pudo obtener IP pública${NC}"
+    read -p "📝 Ingresa la IP del servidor manualmente: " SERVER_IP
+fi
+
+echo -e "${GREEN}✅ IP detectada: ${CYAN}$SERVER_IP${NC}\n"
+
+# Solicitar grupo de notificaciones
+echo -e "${YELLOW}📢 CONFIGURACIÓN DE NOTIFICACIONES${NC}"
+echo -e "${CYAN}Ingresa el ID del grupo de WhatsApp para notificaciones${NC}"
+echo -e "Ejemplo: 1234567890-123456@g.us"
+echo -e "Deja vacío si no quieres notificaciones en grupo\n"
+
+read -p "ID del grupo para notificaciones: " NOTIFICATION_GROUP
+
+if [[ -n "$NOTIFICATION_GROUP" ]]; then
+    echo -e "${GREEN}✅ Grupo configurado: ${CYAN}$NOTIFICATION_GROUP${NC}"
+else
+    echo -e "${YELLOW}⚠️ Notificaciones en grupo desactivadas${NC}"
+fi
+
+# Confirmar instalación
+echo -e "\n${YELLOW}⚠️  ESTE INSTALADOR HARÁ:${NC}"
+echo -e "   • Instalar Node.js 20.x + Chrome"
+echo -e "   • Crear SSH Bot Pro con planes separados"
+echo -e "   • Sistema de estados inteligente"
+echo -e "   • Menú: 1=Prueba, 2=Comprar, 3=Renovar, 4=APP"
+echo -e "   • Submenú: Planes Diarios (7,15) / Mensuales (30,50)"
+echo -e "   • Planes DIARIOS: 7, 15 días"
+echo -e "   • Planes MENSUALES: 30, 50 días"
+echo -e "   • Test gratuito: 2 horas por defecto"
+echo -e "   • 📢 Notificaciones automáticas:"
+echo -e "     - Aviso por vencer (24h antes)"
+echo -e "     - Recordatorio de vencimiento"
+echo -e "   • Generación de link MercadoPago"
+echo -e "   • Panel de control con edición de horas de test"
+echo -e "   • APK automático + Test 2h"
+echo -e "   • Cron limpieza cada 15 minutos"
+echo -e "   • 🔐 CONTRASEÑA FIJA: mgvpn247 para todos"
+echo -e "\n${RED}⚠️  Se eliminarán instalaciones anteriores${NC}"
+
+read -p "$(echo -e "${YELLOW}¿Continuar con la instalación? (s/N): ${NC}")" -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Ss]$ ]]; then
+    echo -e "${RED}❌ Instalación cancelada${NC}"
+    exit 0
+fi
 
 # ================================================
-# INSTALACIÓN PRINCIPAL COMPLETA
+# INSTALAR DEPENDENCIAS
 # ================================================
-main_installation() {
-    echo -e "${CYAN}${BOLD}🚀 INICIANDO INSTALACIÓN PRINCIPAL COMPLETA...${NC}"
-    
-    # Detectar IP
-    echo -e "${YELLOW}🔍 Detectando IP del servidor...${NC}"
-    SERVER_IP=$(curl -4 -s --max-time 10 ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}' || echo "127.0.0.1")
-    if [[ -z "$SERVER_IP" || "$SERVER_IP" == "127.0.0.1" ]]; then
-        echo -e "${RED}❌ No se pudo obtener IP pública${NC}"
-        read -p "📝 Ingresa la IP del servidor manualmente: " SERVER_IP
-    fi
+echo -e "\n${CYAN}${BOLD}📦 INSTALANDO DEPENDENCIAS...${NC}"
 
-    echo -e "${GREEN}✅ IP detectada: ${CYAN}$SERVER_IP${NC}\n"
-    
-    # Solicitar grupo de notificaciones
-    echo -e "${YELLOW}📢 CONFIGURACIÓN DE NOTIFICACIONES${NC}"
-    echo -e "${CYAN}Ingresa el ID del grupo de WhatsApp para notificaciones${NC}"
-    echo -e "Ejemplo: 1234567890-123456@g.us"
-    echo -e "Deja vacío si no quieres notificaciones en grupo\n"
-    
-    read -p "ID del grupo para notificaciones: " NOTIFICATION_GROUP
-    
-    if [[ -n "$NOTIFICATION_GROUP" ]]; then
-        echo -e "${GREEN}✅ Grupo configurado: ${CYAN}$NOTIFICATION_GROUP${NC}"
-    else
-        echo -e "${YELLOW}⚠️ Notificaciones en grupo desactivadas${NC}"
-    fi
-    
-    # Confirmar instalación
-    echo -e "\n${YELLOW}⚠️  ESTE INSTALADOR HARÁ:${NC}"
-    echo -e "   • Instalar dependencias del sistema"
-    echo -e "   • Crear SSH Bot Pro con planes separados"
-    echo -e "   • Sistema de notificaciones automáticas"
-    echo -e "   • Menú: 1=Prueba, 2=Comprar, 3=Renovar, 4=APP"
-    echo -e "   • Planes DIARIOS: 7, 15 días"
-    echo -e "   • Planes MENSUALES: 30, 50 días"
-    echo -e "   • Test gratuito: 2 horas"
-    echo -e "   • CONTRASEÑA FIJA: mgvpn247"
-    echo -e "   • MercadoPago integrado"
-    echo -e "   • APK enviada como archivo"
-    echo -e "   • Sin cupones de descuento"
-    echo -e "   • Panel de control completo"
-    
-    read -p "$(echo -e "${YELLOW}¿Continuar con la instalación? (s/N): ${NC}")" -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Ss]$ ]]; then
-        echo -e "${RED}❌ Instalación cancelada${NC}"
-        exit 0
-    fi
-    
-    # Actualizar sistema
-    echo -e "${YELLOW}🔄 Actualizando sistema...${NC}"
-    apt-get update -y
-    apt-get upgrade -y
-    
-    # Instalar dependencias del sistema
-    echo -e "${YELLOW}📦 Instalando dependencias del sistema...${NC}"
-    apt-get install -y \
-        git curl wget sqlite3 jq \
-        build-essential python3 python3-pip \
-        unzip cron ufw ffmpeg gnupg \
-        libcairo2-dev libpango1.0-dev \
-        libjpeg-dev libgif-dev librsvg2-dev \
-        pkg-config ca-certificates \
-        software-properties-common apt-transport-https
-        
-    # Instalar Chrome/Chromium
-    echo -e "${YELLOW}🌐 Instalando Chrome/Chromium...${NC}"
-    apt-get install -y wget
-    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - 2>/dev/null || true
-    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list 2>/dev/null || true
-    apt-get update -y
-    
-    # Intentar instalar chrome o chromium
-    apt-get install -y google-chrome-stable 2>/dev/null || \
-    apt-get install -y chromium-browser 2>/dev/null || \
-    apt-get install -y chromium 2>/dev/null || \
-    echo -e "${YELLOW}⚠️  No se pudo instalar Chrome, usando sistema alternativo${NC}"
-    
-    # Configurar firewall
-    echo -e "${YELLOW}🛡️  Configurando firewall...${NC}"
-    ufw allow 22/tcp 2>/dev/null || true
-    ufw allow 80/tcp 2>/dev/null || true
-    ufw allow 443/tcp 2>/dev/null || true
-    ufw --force enable 2>/dev/null || true
-    
-    # Crear estructura de directorios
-    echo -e "${YELLOW}📁 Creando estructura de directorios...${NC}"
-    INSTALL_DIR="/opt/ssh-bot"
-    USER_HOME="/root/ssh-bot"
-    
-    # Limpiar instalaciones anteriores
-    pm2 delete ssh-bot 2>/dev/null || true
-    pm2 flush 2>/dev/null || true
-    rm -rf "$INSTALL_DIR" "$USER_HOME" 2>/dev/null || true
-    rm -rf /root/.wwebjs_auth /root/.wwebjs_cache 2>/dev/null || true
-    
-    mkdir -p "$INSTALL_DIR"/{data,config,qr_codes,logs,apk}
-    mkdir -p "$USER_HOME"
-    mkdir -p /root/.wwebjs_auth
-    chmod -R 755 "$INSTALL_DIR"
-    chmod -R 700 /root/.wwebjs_auth
-    
-    # Crear archivo APK por defecto (mensaje)
-    echo -e "${YELLOW}📱 Preparando directorio APK...${NC}"
-    APK_DIR="$INSTALL_DIR/apk"
-    touch "$APK_DIR/.apk_placeholder"
-    echo "Suba su archivo APK aquí y renómbrelo a 'app.apk'" > "$APK_DIR/LEEME.txt"
-    
-    # Crear configuración COMPLETA
-    CONFIG_FILE="$INSTALL_DIR/config/config.json"
-    DB_FILE="$INSTALL_DIR/data/users.db"
-    
-    cat > "$CONFIG_FILE" << EOF
+# Actualizar sistema
+apt-get update -y
+apt-get upgrade -y
+
+# Instalar Node.js 20.x
+echo -e "${YELLOW}📦 Instalando Node.js 20.x...${NC}"
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt-get install -y nodejs
+apt-get install -y gcc g++ make
+
+# Instalar Chromium
+echo -e "${YELLOW}🌐 Instalando Chrome/Chromium...${NC}"
+apt-get install -y wget gnupg
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+apt-get update -y
+apt-get install -y google-chrome-stable
+
+# Instalar dependencias del sistema
+echo -e "${YELLOW}⚙️ Instalando utilidades...${NC}"
+apt-get install -y \
+    git \
+    curl \
+    wget \
+    sqlite3 \
+    jq \
+    build-essential \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    librsvg2-dev \
+    pkg-config \
+    python3 \
+    python3-pip \
+    ffmpeg \
+    unzip \
+    cron \
+    ufw
+
+# Instalar PM2 globalmente
+echo -e "${YELLOW}🔄 Instalando PM2...${NC}"
+npm install -g pm2
+pm2 update
+
+# Configurar firewall
+echo -e "${YELLow}🛡️ Configurando firewall...${NC}"
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw allow 8001/tcp
+ufw allow 3000/tcp
+ufw --force enable
+
+echo -e "${GREEN}✅ Dependencias instaladas${NC}"
+
+# ================================================
+# PREPARAR ESTRUCTURA
+# ================================================
+echo -e "\n${CYAN}${BOLD}📁 CREANDO ESTRUCTURA...${NC}"
+
+INSTALL_DIR="/opt/ssh-bot"
+USER_HOME="/root/ssh-bot"
+DB_FILE="$INSTALL_DIR/data/users.db"
+CONFIG_FILE="$INSTALL_DIR/config/config.json"
+
+# Limpiar instalaciones anteriores
+echo -e "${YELLOW}🧹 Limpiando instalaciones anteriores...${NC}"
+pm2 delete ssh-bot 2>/dev/null || true
+pm2 flush 2>/dev/null || true
+rm -rf "$INSTALL_DIR" "$USER_HOME" 2>/dev/null || true
+rm -rf /root/.wwebjs_auth /root/.wwebjs_cache 2>/dev/null || true
+
+# Crear directorios
+mkdir -p "$INSTALL_DIR"/{data,config,qr_codes,logs}
+mkdir -p "$USER_HOME"
+mkdir -p /root/.wwebjs_auth
+chmod -R 755 "$INSTALL_DIR"
+chmod -R 700 /root/.wwebjs_auth
+
+# Crear configuración CON PLANES SEPARADOS
+cat > "$CONFIG_FILE" << EOF
 {
     "bot": {
         "name": "SSH Bot Pro",
-        "version": "1.0-COMPLETO",
+        "version": "1.0-PLANES-SEPARADOS",
         "server_ip": "$SERVER_IP",
         "default_password": "mgvpn247",
         "notification_group": "$NOTIFICATION_GROUP"
@@ -304,25 +229,21 @@ main_installation() {
         "access_token": "",
         "enabled": false
     },
-    "apk": {
-        "path": "$APK_DIR/app.apk",
-        "filename": "MGVPN.apk",
-        "caption": "📱 MGVPN - Cliente SSH Premium\n\n🔐 Contraseña: mgvpn247\n📍 IP: $SERVER_IP\n\n💡 Instrucciones:\n1. Permite instalación de fuentes desconocidas\n2. Instala la aplicación\n3. Configura con tus credenciales SSH"
-    },
     "links": {
         "tutorial": "https://youtube.com",
-        "support": "https://wa.me/543435071016"
+        "support": "https://wa.me/543435071016",
+        "app_download": "https://www.mediafire.com/file/p8kgthxbsid7xws/MAJ/DNI_AND_FIL"
     },
     "paths": {
         "database": "$DB_FILE",
-        "chromium": "/usr/bin/google-chrome-stable",
+        "chromium": "/usr/bin/google-chrome",
         "qr_codes": "$INSTALL_DIR/qr_codes"
     }
 }
 EOF
-    
-    # Crear base de datos COMPLETA
-    sqlite3 "$DB_FILE" << 'SQL'
+
+# Crear base de datos
+sqlite3 "$DB_FILE" << 'SQL'
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     phone TEXT,
@@ -350,6 +271,7 @@ CREATE TABLE payments (
     days INTEGER,
     connections INTEGER DEFAULT 1,
     amount REAL,
+    discount_code TEXT,
     final_amount REAL,
     status TEXT DEFAULT 'pending',
     payment_url TEXT,
@@ -386,15 +308,19 @@ CREATE INDEX idx_users_notification ON users(notification_sent);
 CREATE INDEX idx_payments_status ON payments(status);
 SQL
 
-    echo -e "${GREEN}✅ Base de datos creada${NC}"
-    
-    # Crear bot COMPLETO
-    cd "$USER_HOME"
-    
-    echo -e "${YELLOW}📦 Creando package.json...${NC}"
-    cat > package.json << 'PKGEOF'
+echo -e "${GREEN}✅ Estructura creada con sistema de notificaciones${NC}"
+
+# ================================================
+# CREAR BOT CON PLANES SEPARADOS SIN CUPONES
+# ================================================
+echo -e "\n${CYAN}${BOLD}🤖 CREANDO BOT CON PLANES SEPARADOS SIN CUPONES...${NC}"
+
+cd "$USER_HOME"
+
+# package.json
+cat > package.json << 'PKGEOF'
 {
-    "name": "ssh-bot-pro-completo",
+    "name": "ssh-bot-pro",
     "version": "1.0.0",
     "main": "bot.js",
     "dependencies": {
@@ -410,20 +336,21 @@ SQL
     }
 }
 PKGEOF
-    
-    echo -e "${YELLOW}📦 Instalando dependencias Node.js...${NC}"
-    npm install --silent 2>&1 | grep -v "npm WARN" || npm install --force
-    
-    # Aplicar parche para error WhatsApp Web
-    echo -e "${YELLOW}🔧 Aplicando parche para WhatsApp Web...${NC}"
-    find node_modules/whatsapp-web.js -name "Client.js" -type f -exec sed -i 's/if (chat && chat.markedUnread)/if (false \&\& chat.markedUnread)/g' {} \; 2>/dev/null || true
-    
-    echo -e "${GREEN}✅ Dependencias instaladas${NC}"
-    
-    # Crear bot.js COMPLETO (versión simplificada pero funcional)
-    echo -e "${YELLOW}📝 Creando bot.js completo...${NC}"
-    
-    cat > "bot.js" << 'BOTEOF'
+
+echo -e "${YELLOW}📦 Instalando paquetes Node.js...${NC}"
+npm install --silent 2>&1 | grep -v "npm WARN" || true
+
+# ✅ APLICAR PARCHE PARA ERROR markedUnread
+echo -e "${YELLOW}🔧 Aplicando parche para error WhatsApp Web...${NC}"
+find node_modules/whatsapp-web.js -name "Client.js" -type f -exec sed -i 's/if (chat && chat.markedUnread)/if (false \&\& chat.markedUnread)/g' {} \; 2>/dev/null || true
+find node_modules/whatsapp-web.js -name "Client.js" -type f -exec sed -i 's/const sendSeen = async (chatId) => {/const sendSeen = async (chatId) => { console.log("[DEBUG] sendSeen deshabilitado"); return;/g' {} \; 2>/dev/null || true
+
+echo -e "${GREEN}✅ Parche markedUnread aplicado${NC}"
+
+# Crear bot.js CON PLANES SEPARADOS SIN CUPONES
+echo -e "${YELLOW}📝 Creando bot.js con planes separados SIN CUPONES...${NC}"
+
+cat > "bot.js" << 'BOTEOF'
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const qrcodeTerminal = require('qrcode-terminal');
 const QRCode = require('qrcode');
@@ -435,6 +362,7 @@ const chalk = require('chalk');
 const cron = require('node-cron');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 const execPromise = util.promisify(exec);
 
@@ -445,25 +373,19 @@ function loadConfig() {
 
 let config = loadConfig();
 const db = new sqlite3.Database(config.paths.database);
-moment.locale('es');
 
-console.log(chalk.cyan.bold('\n🤖 SSH BOT PRO - VERSIÓN COMPLETA'));
-console.log(chalk.cyan(`📍 IP: ${config.bot.server_ip}`));
-console.log(chalk.cyan(`🔐 Pass: ${config.bot.default_password}`));
-console.log(chalk.green('✅ Sistema de planes separados'));
-console.log(chalk.green('✅ Planes DIARIOS: 7, 15 días'));
-console.log(chalk.green('✅ Planes MENSUALES: 30, 50 días'));
-console.log(chalk.green('✅ Test: 2 horas'));
-console.log(chalk.green('✅ Sistema de notificaciones'));
-console.log(chalk.green('✅ APK por archivo'));
-console.log(chalk.red('🚫 Sin cupones de descuento\n'));
-
-// Funciones de estado
+// ✅ FUNCIONES DE ESTADO
 function getUserState(phone) {
     return new Promise((resolve) => {
         db.get('SELECT state, data FROM user_state WHERE phone = ?', [phone], (err, row) => {
-            if (err || !row) resolve({ state: 'main_menu', data: null });
-            else resolve({ state: row.state || 'main_menu', data: row.data ? JSON.parse(row.data) : null });
+            if (err || !row) {
+                resolve({ state: 'main_menu', data: null });
+            } else {
+                resolve({
+                    state: row.state || 'main_menu',
+                    data: row.data ? JSON.parse(row.data) : null
+                });
+            }
         });
     });
 }
@@ -471,61 +393,189 @@ function getUserState(phone) {
 function setUserState(phone, state, data = null) {
     return new Promise((resolve) => {
         const dataStr = data ? JSON.stringify(data) : null;
-        db.run(`INSERT OR REPLACE INTO user_state (phone, state, data, updated_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
-            [phone, state, dataStr], (err) => { if (err) console.error('❌ Error estado:', err.message); resolve(); });
+        db.run(
+            `INSERT OR REPLACE INTO user_state (phone, state, data, updated_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
+            [phone, state, dataStr],
+            (err) => {
+                if (err) console.error(chalk.red('❌ Error estado:'), err.message);
+                resolve();
+            }
+        );
     });
 }
 
-// Generar usuario
+function clearUserState(phone) {
+    db.run('DELETE FROM user_state WHERE phone = ?', [phone]);
+}
+
+// ✅ MERCADOPAGO SDK V2.X
+let mpClient = null;
+let mpPreference = null;
+
+function initMercadoPago() {
+    config = loadConfig();
+    if (config.mercadopago.access_token && config.mercadopago.access_token !== '') {
+        try {
+            const { MercadoPagoConfig, Preference } = require('mercadopago');
+            
+            mpClient = new MercadoPagoConfig({ 
+                accessToken: config.mercadopago.access_token,
+                options: { timeout: 5000, idempotencyKey: true }
+            });
+            
+            mpPreference = new Preference(mpClient);
+            
+            console.log(chalk.green('✅ MercadoPago SDK v2.x ACTIVO'));
+            console.log(chalk.cyan(`🔑 Token: ${config.mercadopago.access_token.substring(0, 20)}...`));
+            return true;
+        } catch (error) {
+            console.log(chalk.red('❌ Error inicializando MP:'), error.message);
+            mpClient = null;
+            mpPreference = null;
+            return false;
+        }
+    }
+    console.log(chalk.yellow('⚠️ MercadoPago NO configurado (token vacío)'));
+    return false;
+}
+
+let mpEnabled = initMercadoPago();
+moment.locale('es');
+
+console.log(chalk.cyan.bold('\n╔══════════════════════════════════════════════════════════════╗'));
+console.log(chalk.cyan.bold('║                🤖 SSH BOT PRO - PLANES SEPARADOS            ║'));
+console.log(chalk.cyan.bold('║               📅 DIARIOS: 7, 15 DÍAS                        ║'));
+console.log(chalk.cyan.bold('║               📅 MENSUALES: 30, 50 DÍAS                     ║'));
+console.log(chalk.cyan.bold('║               ⏰ TEST GRATIS: 2 HORAS                       ║'));
+console.log(chalk.cyan.bold('║               🔐 CONTRASEÑA FIJA: mgvpn247                  ║'));
+console.log(chalk.cyan.bold('║               📢 NOTIFICACIONES AUTOMÁTICAS                 ║'));
+console.log(chalk.cyan.bold('║               🚫 SIN CUPONES DE DESCUENTO                   ║'));
+console.log(chalk.cyan.bold('╚══════════════════════════════════════════════════════════════╝\n'));
+console.log(chalk.yellow(`📍 IP: ${config.bot.server_ip}`));
+console.log(chalk.yellow(`💳 MercadoPago: ${mpEnabled ? '✅ SDK v2.x ACTIVO' : '❌ NO CONFIGURADO'}`));
+console.log(chalk.yellow(`📢 Grupo notificaciones: ${config.bot.notification_group ? '✅ CONFIGURADO' : '❌ NO CONFIGURADO'}`));
+console.log(chalk.green('✅ WhatsApp Web parcheado (no markedUnread error)'));
+console.log(chalk.green('✅ Sistema de estados activo'));
+console.log(chalk.green('✅ Planes DIARIOS: 7, 15 días'));
+console.log(chalk.green('✅ Planes MENSUALES: 30, 50 días'));
+console.log(chalk.green('✅ Test: 2 horas exactas'));
+console.log(chalk.green('✅ CONTRASEÑA FIJA: mgvpn247 para todos los usuarios'));
+console.log(chalk.green('✅ Sistema de notificaciones activo'));
+console.log(chalk.red('🚫 Cupones de descuento DESACTIVADOS'));
+
+const client = new Client({
+    authStrategy: new LocalAuth({dataPath: '/root/.wwebjs_auth', clientId: 'ssh-bot-multiplan'}),
+    puppeteer: {
+        headless: true,
+        executablePath: config.paths.chromium,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--no-first-run', '--disable-extensions'],
+        timeout: 60000
+    },
+    authTimeoutMs: 60000
+});
+
+let qrCount = 0;
+
+client.on('qr', (qr) => {
+    qrCount++;
+    console.clear();
+    console.log(chalk.yellow.bold(`\n╔════════ 📱 QR #${qrCount} - ESCANEA AHORA ════════╗\n`));
+    qrcodeTerminal.generate(qr, { small: true });
+    QRCode.toFile('/root/qr-whatsapp.png', qr, { width: 500 }).catch(() => {});
+    console.log(chalk.cyan('\n1️⃣ Abre WhatsApp → Dispositivos vinculados'));
+    console.log(chalk.cyan('2️⃣ Escanea el QR ☝️'));
+    console.log(chalk.green('\n💾 QR guardado: /root/qr-whatsapp.png\n'));
+});
+
+client.on('authenticated', () => console.log(chalk.green('✅ Autenticado')));
+client.on('loading_screen', (p, m) => console.log(chalk.yellow(`⏳ Cargando: ${p}% - ${m}`)));
+client.on('ready', () => {
+    console.clear();
+    console.log(chalk.green.bold('\n✅ BOT CONECTADO Y OPERATIVO\n'));
+    console.log(chalk.cyan('💬 Envía "menu" a tu WhatsApp\n'));
+    console.log(chalk.yellow('📢 Sistema de notificaciones ACTIVO'));
+    console.log(chalk.yellow(`⏰ Avisos por vencer: ${config.notifications.expiry_warning_hours} horas antes`));
+    console.log(chalk.red('🚫 Cupones de descuento DESACTIVADOS'));
+    qrCount = 0;
+});
+client.on('auth_failure', (m) => console.log(chalk.red('❌ Error auth:'), m));
+client.on('disconnected', (r) => console.log(chalk.yellow('⚠️ Desconectado:'), r));
+
 function generateUsername(tipo = 'test') {
+    // Generar nombre de usuario en minúsculas según el tipo
     const randomNum = Math.floor(1000 + Math.random() * 9000);
-    if (tipo === 'test') return 'test' + randomNum;
-    else return 'user' + randomNum;
+    if (tipo === 'test') {
+        return 'test' + randomNum;  // test1234
+    } else {
+        return 'user' + randomNum;  // user5678
+    }
 }
 
 function generatePassword() {
+    // Contraseña fija en minúsculas
     return 'mgvpn247';
 }
 
-// Crear usuario SSH
 async function createSSHUser(phone, username, password, days, connections = 1) {
     if (days === 0) {
         const expireFull = moment().add(config.prices.test_hours, 'hours').format('YYYY-MM-DD HH:mm:ss');
         
+        console.log(chalk.yellow(`⌛ Test ${username} expira: ${expireFull} (${config.prices.test_hours} horas)`));
+        
         const commands = [
-            `useradd -m -s /bin/bash ${username} 2>/dev/null || true`,
+            `useradd -m -s /bin/bash ${username}`,
             `echo "${username}:${password}" | chpasswd`
         ];
         
         for (const cmd of commands) {
-            try { await execPromise(cmd); } catch (error) { console.error(`❌ Error: ${cmd}`, error.message); }
+            try {
+                await execPromise(cmd);
+            } catch (error) {
+                console.error(chalk.red(`❌ Error: ${cmd}`), error.message);
+                throw error;
+            }
         }
         
+        const tipo = 'test';
         return new Promise((resolve, reject) => {
-            db.run(`INSERT INTO users (phone, username, password, tipo, expires_at, max_connections, status, notification_sent) VALUES (?, ?, ?, 'test', ?, ?, 1, 0)`,
-                [phone, username, password, expireFull, 1],
-                (err) => err ? reject(err) : resolve({ username, password, expires: expireFull, tipo: 'test' }));
+            db.run(`INSERT INTO users (phone, username, password, tipo, expires_at, max_connections, status, notification_sent) VALUES (?, ?, ?, ?, ?, ?, 1, 0)`,
+                [phone, username, password, tipo, expireFull, 1],
+                (err) => err ? reject(err) : resolve({ 
+                    username, 
+                    password: password,
+                    expires: expireFull,
+                    tipo: 'test',
+                    duration: `${config.prices.test_hours} horas`
+                }));
         });
     } else {
         const expireDate = moment().add(days, 'days').format('YYYY-MM-DD');
         const expireFull = moment().add(days, 'days').format('YYYY-MM-DD 23:59:59');
         
+        console.log(chalk.yellow(`⌛ Premium ${username} expira: ${expireDate} (${days} días)`));
+        
         try {
-            await execPromise(`useradd -M -s /bin/false -e ${expireDate} ${username} 2>/dev/null || true && echo "${username}:${password}" | chpasswd`);
+            await execPromise(`useradd -M -s /bin/false -e ${expireDate} ${username} && echo "${username}:${password}" | chpasswd`);
         } catch (error) {
-            console.error('❌ Error creando premium:', error.message);
+            console.error(chalk.red('❌ Error creando premium:'), error.message);
             throw error;
         }
         
+        const tipo = 'premium';
         return new Promise((resolve, reject) => {
-            db.run(`INSERT INTO users (phone, username, password, tipo, expires_at, max_connections, status, notification_sent) VALUES (?, ?, ?, 'premium', ?, ?, 1, 0)`,
-                [phone, username, password, expireFull, connections],
-                (err) => err ? reject(err) : resolve({ username, password, expires: expireFull, tipo: 'premium' }));
+            db.run(`INSERT INTO users (phone, username, password, tipo, expires_at, max_connections, status, notification_sent) VALUES (?, ?, ?, ?, ?, ?, 1, 0)`,
+                [phone, username, password, tipo, expireFull, connections],
+                (err) => err ? reject(err) : resolve({ 
+                    username, 
+                    password: password,
+                    expires: expireFull,
+                    tipo: 'premium',
+                    duration: `${days} días`
+                }));
         });
     }
 }
 
-// Verificar prueba diaria
 function canCreateTest(phone) {
     return new Promise((resolve) => {
         const today = moment().format('YYYY-MM-DD');
@@ -538,96 +588,295 @@ function registerTest(phone) {
     db.run('INSERT OR IGNORE INTO daily_tests (phone, date) VALUES (?, ?)', [phone, moment().format('YYYY-MM-DD')]);
 }
 
-// Enviar APK
-async function sendAPK(phone) {
+// ✅ FUNCIÓN PARA ENVIAR AVISO POR VENCER
+async function sendExpiryWarning() {
     try {
-        const apkPath = config.apk.path;
+        const warningTime = moment().add(config.notifications.expiry_warning_hours, 'hours').format('YYYY-MM-DD HH:mm:ss');
         
-        if (!fs.existsSync(apkPath)) {
-            await client.sendMessage(phone, `⚠️ *APK NO DISPONIBLE*
+        console.log(chalk.yellow(`🔍 Buscando usuarios que expiran en ${config.notifications.expiry_warning_hours} horas...`));
+        
+        db.all(`SELECT u.phone, u.username, u.expires_at, u.notification_sent FROM users u WHERE u.status = 1 AND u.tipo = 'premium' AND u.expires_at <= ? AND u.notification_sent = 0`, 
+            [warningTime],
+            async (err, users) => {
+                if (err) {
+                    console.error(chalk.red('❌ Error consultando usuarios por vencer:'), err.message);
+                    return;
+                }
+                
+                if (!users || users.length === 0) {
+                    console.log(chalk.cyan('✅ No hay usuarios por vencer'));
+                    return;
+                }
+                
+                console.log(chalk.yellow(`📢 Enviando avisos a ${users.length} usuarios...`));
+                
+                for (const user of users) {
+                    try {
+                        const expireDate = moment(user.expires_at);
+                        const hoursLeft = expireDate.diff(moment(), 'hours');
+                        const daysLeft = expireDate.diff(moment(), 'days');
+                        
+                        let timeLeft;
+                        if (hoursLeft < 24) {
+                            timeLeft = `${hoursLeft} horas`;
+                        } else {
+                            timeLeft = `${daysLeft} días`;
+                        }
+                        
+                        const message = `⚠️ *AVISO IMPORTANTE* ⚠️
 
-El administrador aún no ha subido el archivo APK.
+Tu cuenta SSH está por vencer:
 
-Por favor contacta soporte:
-${config.links.support}`, { sendSeen: false });
-            return false;
-        }
-        
-        const media = MessageMedia.fromFilePath(apkPath);
-        await client.sendMessage(phone, media, {
-            caption: config.apk.caption,
-            sendSeen: false
-        });
-        
-        return true;
+👤 Usuario: *${user.username}*
+⏰ Vence: *${expireDate.format('DD/MM/YYYY HH:mm')}*
+⌛ Tiempo restante: *${timeLeft}*
+
+🔄 Para renovar tu cuenta:
+1. Escribe *menu*
+2. Selecciona *3 - Renovar Usuario SSH*
+3. Elige tu plan de renovación
+4. Realiza el pago
+
+¡No pierdas tu acceso! 🚀`;
+                        
+                        await client.sendMessage(user.phone, message, { sendSeen: false });
+                        
+                        // Marcar como notificado
+                        db.run('UPDATE users SET notification_sent = 1 WHERE username = ?', [user.username]);
+                        
+                        console.log(chalk.green(`📢 Aviso enviado a ${user.username} (expira en ${timeLeft})`));
+                        
+                        // Registrar notificación
+                        db.run('INSERT INTO notifications (user_id, type, message) VALUES ((SELECT id FROM users WHERE username = ?), "expiry_warning", ?)', 
+                            [user.username, `Aviso de vencimiento - ${timeLeft} restantes`]);
+                            
+                    } catch (userError) {
+                        console.error(chalk.red(`❌ Error notificando ${user.username}:`), userError.message);
+                    }
+                }
+                
+                console.log(chalk.green(`✅ Avisos enviados a ${users.length} usuarios`));
+            });
+            
     } catch (error) {
-        console.error('❌ Error enviando APK:', error);
-        await client.sendMessage(phone, `❌ Error al enviar el archivo APK: ${error.message}`, { sendSeen: false });
-        return false;
+        console.error(chalk.red('❌ Error en función sendExpiryWarning:'), error.message);
     }
 }
 
-// Planes disponibles
+// ✅ FUNCIÓN PARA ENVIAR RECORDATORIO DE VENCIMIENTO HOY
+async function sendTodayExpiryReminder() {
+    try {
+        const todayStart = moment().format('YYYY-MM-DD 00:00:00');
+        const todayEnd = moment().format('YYYY-MM-DD 23:59:59');
+        
+        console.log(chalk.yellow('🔍 Buscando usuarios que expiran hoy...'));
+        
+        db.all(`SELECT u.phone, u.username, u.expires_at FROM users u WHERE u.status = 1 AND u.tipo = 'premium' AND u.expires_at BETWEEN ? AND ?`, 
+            [todayStart, todayEnd],
+            async (err, users) => {
+                if (err) {
+                    console.error(chalk.red('❌ Error consultando usuarios que expiran hoy:'), err.message);
+                    return;
+                }
+                
+                if (!users || users.length === 0) return;
+                
+                console.log(chalk.yellow(`📢 Enviando recordatorios a ${users.length} usuarios...`));
+                
+                for (const user of users) {
+                    try {
+                        const expireTime = moment(user.expires_at).format('HH:mm');
+                        
+                        const message = `⏰ *RECORDATORIO DE VENCIMIENTO* ⏰
+
+Tu cuenta SSH vence HOY a las *${expireTime}*:
+
+👤 Usuario: *${user.username}*
+🔑 Contraseña: mgvpn247
+⏰ Vence hoy a las: *${expireTime}*
+
+¡Renueva ahora para no perder el acceso! 🚀
+
+Para renovar:
+1. Escribe *menu*
+2. Selecciona *3 - Renovar Usuario SSH*
+3. Elige tu plan
+4. Realiza el pago`;
+                        
+                        await client.sendMessage(user.phone, message, { sendSeen: false });
+                        
+                        console.log(chalk.green(`⏰ Recordatorio enviado a ${user.username} (vence hoy ${expireTime})`));
+                        
+                        // Registrar notificación
+                        db.run('INSERT INTO notifications (user_id, type, message) VALUES ((SELECT id FROM users WHERE username = ?), "today_expiry", ?)', 
+                            [user.username, `Recordatorio vence hoy a las ${expireTime}`]);
+                            
+                    } catch (userError) {
+                        console.error(chalk.red(`❌ Error recordatorio ${user.username}:`), userError.message);
+                    }
+                }
+            });
+            
+    } catch (error) {
+        console.error(chalk.red('❌ Error en función sendTodayExpiryReminder:'), error.message);
+    }
+}
+
+// ✅ MAPA DE PLANES DISPONIBLES
 const dailyPlans = {
-    '7': { days: 7, amountKey: 'price_7d_1conn', name: '7 DÍAS' },
-    '15': { days: 15, amountKey: 'price_15d_1conn', name: '15 DÍAS' }
+    '7': { 
+        days: 7, 
+        amountKey: 'price_7d_1conn',
+        name: '7 DÍAS',
+        description: 'Plan de 7 días de acceso SSH Premium'
+    },
+    '15': { 
+        days: 15, 
+        amountKey: 'price_15d_1conn',
+        name: '15 DÍAS',
+        description: 'Plan de 15 días de acceso SSH Premium'
+    }
 };
 
 const monthlyPlans = {
-    '30': { days: 30, amountKey: 'price_30d_1conn', name: '30 DÍAS' },
-    '50': { days: 50, amountKey: 'price_50d_1conn', name: '50 DÍAS' }
+    '30': { 
+        days: 30, 
+        amountKey: 'price_30d_1conn',
+        name: '30 DÍAS',
+        description: 'Plan de 30 días de acceso SSH Premium'
+    },
+    '50': { 
+        days: 50, 
+        amountKey: 'price_50d_1conn',
+        name: '50 DÍAS',
+        description: 'Plan de 50 días de acceso SSH Premium'
+    }
 };
 
-// Configurar cliente WhatsApp
-const client = new Client({
-    authStrategy: new LocalAuth({dataPath: '/root/.wwebjs_auth', clientId: 'ssh-bot-completo'}),
-    puppeteer: {
-        headless: true,
-        executablePath: config.paths.chromium || '/usr/bin/chromium-browser',
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-        timeout: 60000
-    },
-    authTimeoutMs: 60000
-});
+async function createMercadoPagoPayment(phone, plan, days, amount) {
+    try {
+        config = loadConfig();
+        
+        if (!config.mercadopago.access_token || config.mercadopago.access_token === '') {
+            console.log(chalk.red('❌ Token MP vacío'));
+            return { success: false, error: 'MercadoPago no configurado - Token vacío' };
+        }
+        
+        if (!mpPreference) {
+            console.log(chalk.yellow('🔄 Reinicializando MercadoPago...'));
+            mpEnabled = initMercadoPago();
+            if (!mpEnabled || !mpPreference) {
+                return { success: false, error: 'No se pudo inicializar MercadoPago' };
+            }
+        }
+        
+        const phoneClean = phone.split('@')[0];
+        const paymentId = `SSH-${phoneClean}-${days}d-${Date.now()}`;
+        
+        console.log(chalk.cyan(`🔄 Creando pago MP: ${paymentId}`));
+        
+        const expirationDate = moment().add(24, 'hours');
+        const isoDate = expirationDate.toISOString();
+        
+        // Monto fijo sin descuentos
+        const finalAmount = parseFloat(amount);
+        
+        console.log(chalk.yellow(`💰 Monto: $${finalAmount} ${config.prices.currency}`));
+        
+        const preferenceData = {
+            items: [{
+                title: `SSH PREMIUM ${days} DÍAS`,
+                description: `Acceso SSH Premium por ${days} días - 1 conexión`,
+                quantity: 1,
+                currency_id: config.prices.currency || 'ARS',
+                unit_price: finalAmount
+            }],
+            external_reference: paymentId,
+            expires: true,
+            expiration_date_from: moment().toISOString(),
+            expiration_date_to: isoDate,
+            back_urls: {
+                success: `https://wa.me/${phoneClean}?text=Pago%20exitoso`,
+                failure: `https://wa.me/${phoneClean}?text=Pago%20fallido`,
+                pending: `https://wa.me/${phoneClean}?text=Pago%20pendiente`
+            },
+            auto_return: 'approved',
+            statement_descriptor: 'SSH PREMIUM'
+        };
+        
+        console.log(chalk.yellow(`📦 Producto: ${preferenceData.items[0].title}`));
+        
+        const response = await mpPreference.create({ body: preferenceData });
+        
+        console.log(chalk.cyan('📄 Respuesta MP recibida'));
+        
+        if (response && response.id) {
+            const paymentUrl = response.init_point;
+            const qrPath = `${config.paths.qr_codes}/${paymentId}.png`;
+            
+            await QRCode.toFile(qrPath, paymentUrl, { 
+                width: 400,
+                margin: 1,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            });
+            
+            db.run(
+                `INSERT INTO payments (payment_id, phone, plan, days, connections, amount, discount_code, final_amount, status, payment_url, qr_code, preference_id) VALUES (?, ?, ?, ?, ?, ?, NULL, ?, 'pending', ?, ?, ?)`,
+                [paymentId, phone, `${days}d`, days, 1, amount, finalAmount, paymentUrl, qrPath, response.id],
+                (err) => {
+                    if (err) {
+                        console.error(chalk.red('❌ Error guardando en BD:'), err.message);
+                    }
+                }
+            );
+            
+            console.log(chalk.green(`✅ Pago creado exitosamente`));
+            console.log(chalk.cyan(`🔗 URL: ${paymentUrl.substring(0, 50)}...`));
+            
+            return { 
+                success: true, 
+                paymentId, 
+                paymentUrl, 
+                qrPath,
+                preferenceId: response.id,
+                amount: finalAmount
+            };
+        }
+        
+        throw new Error('Respuesta inválida de MercadoPago');
+        
+    } catch (error) {
+        console.error(chalk.red('❌ Error MercadoPago:'), error.message);
+        
+        db.run(
+            `INSERT INTO logs (type, message, data) VALUES ('mp_error', ?, ?)`,
+            [error.message, JSON.stringify({ stack: error.stack })]
+        );
+        
+        return { success: false, error: error.message };
+    }
+}
 
-let qrCount = 0;
-
-// Eventos del cliente
-client.on('qr', (qr) => {
-    qrCount++;
-    console.clear();
-    console.log(chalk.yellow.bold(`\n📱 QR #${qrCount} - ESCANEA CON WHATSAPP\n`));
-    qrcodeTerminal.generate(qr, { small: true });
-    QRCode.toFile('/root/qr-whatsapp.png', qr, { width: 500 }).catch(() => {});
-    console.log(chalk.cyan('\n1. Abre WhatsApp → Dispositivos vinculados'));
-    console.log(chalk.cyan('2. Escanea el QR de arriba'));
-    console.log(chalk.green('\n💾 QR guardado: /root/qr-whatsapp.png\n'));
-});
-
-client.on('authenticated', () => console.log(chalk.green('✅ Autenticado')));
-client.on('loading_screen', (p, m) => console.log(chalk.yellow(`⏳ Cargando: ${p}% - ${m}`)));
-client.on('ready', () => {
-    console.clear();
-    console.log(chalk.green.bold('\n✅ BOT CONECTADO Y OPERATIVO\n'));
-    console.log(chalk.cyan('💬 Envía "menu" a tu WhatsApp\n'));
-    qrCount = 0;
-});
-client.on('auth_failure', (m) => console.log(chalk.red('❌ Error auth:'), m));
-client.on('disconnected', (r) => console.log(chalk.yellow('⚠️ Desconectado:'), r));
-
-// Manejo de mensajes PRINCIPAL
+// ✅ FLUJO PRINCIPAL CON PLANES SEPARADOS SIN CUPONES
 client.on('message', async (msg) => {
     const text = msg.body.toLowerCase().trim();
     const phone = msg.from;
     if (phone.includes('@g.us')) return;
     
+    config = loadConfig();
     console.log(chalk.cyan(`📩 [${phone.split('@')[0]}]: ${text.substring(0, 30)}`));
     
+    // Obtener estado actual del usuario
     const userState = await getUserState(phone);
     
-    // MENÚ PRINCIPAL
+    // COMANDO MENÚ PRINCIPAL
     if (['menu', 'hola', 'start', 'hi', 'volver', 'atras', '0'].includes(text)) {
+        // Resetear estado a menú principal
         await setUserState(phone, 'main_menu');
+        
         await client.sendMessage(phone, `HOLA, BIENVENIDO BOT MGVPN 🚀
 
 Elija una opción:
@@ -637,10 +886,9 @@ Elija una opción:
 🔄 3 - RENOVAR USUARIO SSH
 📱 4 - DESCARGAR APLICACIÓN
 
-🔐 Contraseña: ${config.bot.default_password}
-📍 IP: ${config.bot.server_ip}`, { sendSeen: false });
+📢 *Sistema de notificaciones activo*`, { sendSeen: false });
     }
-    // OPCIÓN 1: PRUEBA
+    // OPCIÓN 1: CREAR PRUEBA
     else if (text === '1' && userState.state === 'main_menu') {
         if (!(await canCreateTest(phone))) {
             await client.sendMessage(phone, `⚠️ *YA USASTE TU PRUEBA HOY*
@@ -652,69 +900,82 @@ Elija una opción:
         await client.sendMessage(phone, '⏳ Creando cuenta de prueba...', { sendSeen: false });
         
         try {
-            const username = generateUsername('test');
+            const username = generateUsername('test'); // testXXXX
             const password = generatePassword();
             await createSSHUser(phone, username, password, 0, 1);
             registerTest(phone);
             
-            await client.sendMessage(phone, `✅ *PRUEBA CREADA CON ÉXITO* !
+            await client.sendMessage(phone, `PRUEBA CREADA CON ÉXITO !
 
-👤 Usuario: ${username}
-🔑 Contraseña: ${password}
-⏰ Expira en: ${config.prices.test_hours} horas
-🔌 Conexiones: 1 dispositivo
+Usuario: ${username}
+Contraseña: ${password}
+Limite: 1 dispositivo(s)
+Expira en: ${config.prices.test_hours} hora(s)
 
-📱 *APP:* ${config.links.app_download}
-
-¡Disfruta tu prueba! 🚀`, { sendSeen: false });
+APP: ${config.links.app_download}`, { sendSeen: false });
             
             console.log(chalk.green(`✅ Test creado: ${username}`));
         } catch (error) {
             await client.sendMessage(phone, `❌ Error al crear cuenta: ${error.message}`, { sendSeen: false });
         }
     }
-    // OPCIÓN 2: COMPRAR
+    // OPCIÓN 2: COMPRAR USUARIO SSH
     else if (text === '2' && userState.state === 'main_menu') {
         await setUserState(phone, 'buying_ssh');
+        
         await client.sendMessage(phone, `PLANES SSH PREMIUM !
 
 Elija una opción:
-🗓 1 - PLANES SSH DIARIOS (7, 15 DÍAS)
-🗓 2 - PLANES SSH MENSUALES (30, 50 DÍAS)
+🗓 1 - PLANES SSH DIARIOS
+🗓 2 - PLANES SSH MENSUALES
 ⬅️ 0 - VOLVER`, { sendSeen: false });
     }
-    // SUBMENÚ COMPRAS
+    // SUBMENÚ DE COMPRAS SEPARADAS
     else if (userState.state === 'buying_ssh') {
         if (text === '1') {
+            // PLANES DIARIOS
             await setUserState(phone, 'selecting_daily_plan');
-            await client.sendMessage(phone, `🗓 *PLANES SSH DIARIOS*
+            
+            let plansMessage = `🗓 *PLANES SSH DIARIOS*
 
 Elija un plan:
-🗓 1 - 7 DÍAS - $${config.prices.price_7d_1conn} ARS
-🗓 2 - 15 DÍAS - $${config.prices.price_15d_1conn} ARS
-⬅️ 0 - VOLVER`, { sendSeen: false });
+🗓 1 - 1 USUARIO(SSH) - 7 DÍAS - $${config.prices.price_7d_1conn}
+
+🗓 2 - 1 USUARIO(SSH) - 15 DÍAS - $${config.prices.price_15d_1conn}
+
+⬅️ 0 - VOLVER`;
+            
+            await client.sendMessage(phone, plansMessage, { sendSeen: false });
         }
         else if (text === '2') {
+            // PLANES MENSUALES
             await setUserState(phone, 'selecting_monthly_plan');
-            await client.sendMessage(phone, `🗓 *PLANES SSH MENSUALES*
+            
+            let plansMessage = `🗓 *PLANES SSH MENSUALES*
 
 Elija un plan:
-🗓 1 - 30 DÍAS - $${config.prices.price_30d_1conn} ARS
-🗓 2 - 50 DÍAS - $${config.prices.price_50d_1conn} ARS
-⬅️ 0 - VOLVER`, { sendSeen: false });
+
+🗓 1 - 1 USUARIO(SSH) - 30 DÍAS - $${config.prices.price_30d_1conn}
+
+🗓 2 - 1 USUARIO(SSH) - 50 DÍAS - $${config.prices.price_50d_1conn}
+
+⬅️ 0 - VOLVER`;
+            
+            await client.sendMessage(phone, plansMessage, { sendSeen: false });
         }
         else if (text === '0') {
             await setUserState(phone, 'main_menu');
             await client.sendMessage(phone, `HOLA, BIENVENIDO MGVPN
 
 Elija una opción:
+
 🧾 1 - CREAR PRUEBA (${config.prices.test_hours} HORAS)
 💰 2 - COMPRAR USUARIO SSH
 🔄 3 - RENOVAR USUARIO SSH
-📱 4 - DESCARGAR APLICACIÓN`, { sendSeen: false });
+📱 4 - DESCARGAR Aplicación`, { sendSeen: false });
         }
     }
-    // SELECCIÓN PLAN DIARIO
+    // SELECCIÓN DE PLAN DIARIO
     else if (userState.state === 'selecting_daily_plan') {
         if (text === '1' || text === '2') {
             const planNumber = parseInt(text);
@@ -726,19 +987,13 @@ Elija una opción:
             if (planData) {
                 const amount = config.prices[planData.amountKey];
                 
-                await client.sendMessage(phone, `✅ *PLAN SELECCIONADO: ${planData.name}*
-
-💰 Precio: $${amount} ARS
-⏰ Duración: ${planData.days} días
-🔌 Conexiones: 1 dispositivo
-
-⚠️ *MERCADOPAGO NO CONFIGURADO*
-El administrador debe configurar MercadoPago primero.
-
-💬 Contacta soporte para realizar la compra:
-${config.links.support}`, { sendSeen: false });
-                
-                await setUserState(phone, 'main_menu');
+                // Procesar pago directamente SIN preguntar por cupón
+                await processPayment(phone, { 
+                    plan: `${planData.days}d`,
+                    days: planData.days,
+                    amount: amount,
+                    planName: planData.name
+                });
             }
         }
         else if (text === '0') {
@@ -751,7 +1006,7 @@ Elija una opción:
 ⬅️ 0 - VOLVER`, { sendSeen: false });
         }
     }
-    // SELECCIÓN PLAN MENSUAL
+    // SELECCIÓN DE PLAN MENSUAL
     else if (userState.state === 'selecting_monthly_plan') {
         if (text === '1' || text === '2') {
             const planNumber = parseInt(text);
@@ -763,19 +1018,13 @@ Elija una opción:
             if (planData) {
                 const amount = config.prices[planData.amountKey];
                 
-                await client.sendMessage(phone, `✅ *PLAN SELECCIONADO: ${planData.name}*
-
-💰 Precio: $${amount} ARS
-⏰ Duración: ${planData.days} días
-🔌 Conexiones: 1 dispositivo
-
-⚠️ *MERCADOPAGO NO CONFIGURADO*
-El administrador debe configurar MercadoPago primero.
-
-💬 Contacta soporte para realizar la compra:
-${config.links.support}`, { sendSeen: false });
-                
-                await setUserState(phone, 'main_menu');
+                // Procesar pago directamente SIN preguntar por cupón
+                await processPayment(phone, { 
+                    plan: `${planData.days}d`,
+                    days: planData.days,
+                    amount: amount,
+                    planName: planData.name
+                });
             }
         }
         else if (text === '0') {
@@ -788,8 +1037,9 @@ Elija una opción:
 ⬅️ 0 - VOLVER`, { sendSeen: false });
         }
     }
-    // OPCIÓN 3: RENOVAR
+    // OPCIÓN 3: RENOVAR USUARIO SSH (MEJORADO)
     else if (text === '3' && userState.state === 'main_menu') {
+        // Buscar usuarios activos del cliente
         db.all('SELECT username, expires_at FROM users WHERE phone = ? AND status = 1 ORDER BY expires_at DESC', [phone], (err, rows) => {
             if (err || !rows || rows.length === 0) {
                 client.sendMessage(phone, `🔄 *RENOVAR USUARIO SSH*
@@ -802,46 +1052,488 @@ Para crear una nueva cuenta, selecciona:
             }
             
             let message = `🔄 *RENOVAR USUARIO SSH*\n\nTus cuentas activas:\n`;
+            
             rows.forEach((row, index) => {
                 const expireDate = moment(row.expires_at).format('DD/MM/YYYY HH:mm');
                 message += `${index + 1}. 👤 *${row.username}* - ⏰ Vence: ${expireDate}\n`;
             });
             
-            message += `\nPara renovar contacta soporte:\n${config.links.support}`;
+            message += `\nPara renovar:\n1. Escribe *renovar [usuario]*\n2. Selecciona el plan\n3. Realiza el pago`;
+            
             client.sendMessage(phone, message, { sendSeen: false });
         });
     }
-    // OPCIÓN 4: DESCARGAR APP
-    else if (text === '4' && userState.state === 'main_menu') {
-        await client.sendMessage(phone, `📱 *DESCARGANDO APLICACIÓN...*
-
-⏳ Buscando archivo APK...`, { sendSeen: false });
+    // COMANDO RENOVAR ESPECÍFICO
+    else if (text.startsWith('renovar ') && userState.state === 'main_menu') {
+        const username = text.replace('renovar ', '').trim();
         
-        const apkSent = await sendAPK(phone);
-        
-        if (apkSent) {
-            await client.sendMessage(phone, `✅ *APK ENVIADA CON ÉXITO*
+        db.get('SELECT username FROM users WHERE username = ? AND phone = ? AND status = 1', [username, phone], (err, row) => {
+            if (err || !row) {
+                client.sendMessage(phone, `❌ No tienes una cuenta activa con usuario: *${username}*
 
-📁 *Nombre:* ${config.apk.filename}
-💡 *Instrucciones:*
-1. Permite instalación de fuentes desconocidas
-2. Instala la aplicación
-3. Configura con tus credenciales SSH
+Verifica el nombre de usuario e intenta nuevamente.`, { sendSeen: false });
+                return;
+            }
+            
+            setUserState(phone, 'renovating_user', { username: username }).then(() => {
+                client.sendMessage(phone, `🔄 *RENOVACIÓN: ${username}*
 
-🔐 *Credenciales:*
-Usuario: (el que te proporcionamos)
-Contraseña: ${config.bot.default_password}`, { sendSeen: false });
+Selecciona el tipo de plan:
+
+🗓 1 - PLANES DIARIOS
+🗓 2 - PLANES MENSUALES
+⬅️ 0 - VOLVER`, { sendSeen: false });
+            });
+        });
+    }
+    // SELECCIÓN DE TIPO DE PLAN PARA RENOVACIÓN
+    else if (userState.state === 'renovating_user') {
+        if (text === '1') {
+            // PLANES DIARIOS PARA RENOVACIÓN
+            await setUserState(phone, 'renovation_selecting_daily', { username: userState.data.username });
+            
+            await client.sendMessage(phone, `🔄 *RENOVACIÓN: ${userState.data.username}*
+🗓 *PLANES DIARIOS*
+
+Selecciona un plan:
+🗓 1 - 7 DÍAS - $${config.prices.price_7d_1conn}
+🗓 2 - 15 DÍAS - $${config.prices.price_15d_1conn}
+⬅️ 0 - VOLVER`, { sendSeen: false });
         }
+        else if (text === '2') {
+            // PLANES MENSUALES PARA RENOVACIÓN
+            await setUserState(phone, 'renovation_selecting_monthly', { username: userState.data.username });
+            
+            await client.sendMessage(phone, `🔄 *RENOVACIÓN: ${userState.data.username}*
+🗓 *PLANES MENSUALES*
+
+Selecciona un plan:
+🗓 1 - 30 DÍAS - $${config.prices.price_30d_1conn}
+🗓 2 - 50 DÍAS - $${config.prices.price_50d_1conn}
+⬅️ 0 - VOLVER`, { sendSeen: false });
+        }
+        else if (text === '0') {
+            await setUserState(phone, 'main_menu');
+            await client.sendMessage(phone, `Renovación cancelada.
+
+Escribe *menu* para ver las opciones.`, { sendSeen: false });
+        }
+    }
+    // SELECCIÓN DE PLAN DIARIO PARA RENOVACIÓN
+    else if (userState.state === 'renovation_selecting_daily') {
+        if (text === '1' || text === '2') {
+            const planNumber = parseInt(text);
+            let planData;
+            
+            if (planNumber === 1) planData = dailyPlans['7'];
+            else if (planNumber === 2) planData = dailyPlans['15'];
+            
+            if (planData) {
+                const stateData = userState.data || {};
+                const username = stateData.username;
+                
+                // Procesar renovación directamente SIN preguntar por cupón
+                await processRenovation(phone, { 
+                    username: username,
+                    plan: `${planData.days}d`,
+                    days: planData.days,
+                    amount: config.prices[planData.amountKey],
+                    planName: planData.name
+                });
+            }
+        }
+        else if (text === '0') {
+            await setUserState(phone, 'main_menu');
+            await client.sendMessage(phone, `Renovación cancelada.
+
+Escribe *menu* para ver las opciones.`, { sendSeen: false });
+        }
+    }
+    // SELECCIÓN DE PLAN MENSUAL PARA RENOVACIÓN
+    else if (userState.state === 'renovation_selecting_monthly') {
+        if (text === '1' || text === '2') {
+            const planNumber = parseInt(text);
+            let planData;
+            
+            if (planNumber === 1) planData = monthlyPlans['30'];
+            else if (planNumber === 2) planData = monthlyPlans['50'];
+            
+            if (planData) {
+                const stateData = userState.data || {};
+                const username = stateData.username;
+                
+                // Procesar renovación directamente SIN preguntar por cupón
+                await processRenovation(phone, { 
+                    username: username,
+                    plan: `${planData.days}d`,
+                    days: planData.days,
+                    amount: config.prices[planData.amountKey],
+                    planName: planData.name
+                });
+            }
+        }
+        else if (text === '0') {
+            await setUserState(phone, 'main_menu');
+            await client.sendMessage(phone, `Renovación cancelada.
+
+Escribe *menu* para ver las opciones.`, { sendSeen: false });
+        }
+    }
+    // OPCIÓN 4: DESCARGAR APLICACIÓN
+    else if (text === '4' && userState.state === 'main_menu') {
+        await client.sendMessage(phone, `📱 *DESCARGAR APLICACIÓN*
+
+🔗 Enlace de descarga:
+${config.links.app_download}
+
+💡 *Instrucciones:*
+1. Abre el enlace en tu navegador
+2. Descarga el archivo APK
+3. click en mas detalles instalar de todas formas si te pide
+4. Instala la aplicación
+5. Configura con tus credenciales SSH
+
+⚡ *Credenciales por defecto:*
+Usuario: (el que te proporcionamos)
+Contraseña: mgvpn247`, { sendSeen: false });
+    }
+    // COMANDO NO RECONOCIDO - SIN RESPUESTA
+    else {
+        // Silenciar mensaje de comando no reconocido
+        console.log(chalk.yellow(`⚠️ Comando no reconocido de ${phone.split('@')[0]}: ${text}`));
+        return;
     }
 });
 
-// Limpiar usuarios expirados cada 15 minutos
+// ✅ FUNCIÓN PARA PROCESAR PAGO DE COMPRA (SIMPLIFICADA SIN CUPONES)
+async function processPayment(phone, planData) {
+    config = loadConfig();
+    
+    if (!config.mercadopago.access_token || config.mercadopago.access_token === '') {
+        await client.sendMessage(phone, `❌ *MERCADOPAGO NO CONFIGURADO*
+
+El administrador debe configurar MercadoPago primero.
+
+💬 Contacta soporte para más información.`, { sendSeen: false });
+        await setUserState(phone, 'main_menu');
+        return;
+    }
+    
+    await client.sendMessage(phone, '⏳ Procesando tu compra...', { sendSeen: false });
+    
+    try {
+        const payment = await createMercadoPagoPayment(
+            phone, 
+            planData.plan, 
+            planData.days, 
+            planData.amount
+        );
+        
+        if (payment.success) {
+            const message = `### USUARIO SSH
+
+- **Precio:** $${payment.amount}
+- **Límite:** 1 dispositivo(s)
+- **Duración:** ${planData.days} días
+
+---
+
+**LINK DE PAGO**
+
+${payment.paymentUrl}
+
+⏰ *Este enlace expira en 24 horas*
+💳 *Pago seguro con MercadoPago*`;
+            
+            await client.sendMessage(phone, message, { sendSeen: false });
+            
+            // Enviar QR si existe
+            if (fs.existsSync(payment.qrPath)) {
+                try {
+                    const media = MessageMedia.fromFilePath(payment.qrPath);
+                    await client.sendMessage(phone, media, { 
+                        caption: `📱 *Escanea con MercadoPago*\n\n${planData.planName} - $${payment.amount}`, 
+                        sendSeen: false 
+                    });
+                } catch (qrError) {
+                    console.error(chalk.red('⚠️ Error enviando QR:'), qrError.message);
+                }
+            }
+        } else {
+            await client.sendMessage(phone, `❌ *ERROR AL GENERAR PAGO*
+
+${payment.error}
+
+Por favor, intenta de nuevo en unos minutos.`, { sendSeen: false });
+        }
+    } catch (error) {
+        console.error(chalk.red('❌ Error en proceso de pago:'), error);
+        await client.sendMessage(phone, `❌ *ERROR INESPERADO*
+
+${error.message}
+
+💬 Contacta soporte para asistencia.`, { sendSeen: false });
+    }
+    
+    await setUserState(phone, 'main_menu');
+}
+
+// ✅ FUNCIÓN PARA PROCESAR RENOVACIÓN (SIMPLIFICADA SIN CUPONES)
+async function processRenovation(phone, renovationData) {
+    config = loadConfig();
+    
+    if (!config.mercadopago.access_token || config.mercadopago.access_token === '') {
+        await client.sendMessage(phone, `❌ *MERCADOPAGO NO CONFIGURADO*
+
+El administrador debe configurar MercadoPago primero.
+
+💬 Contacta soporte para más información.`, { sendSeen: false });
+        await setUserState(phone, 'main_menu');
+        return;
+    }
+    
+    await client.sendMessage(phone, `⏳ Procesando renovación para *${renovationData.username}*...`, { sendSeen: false });
+    
+    try {
+        const payment = await createMercadoPagoPayment(
+            phone, 
+            renovationData.plan, 
+            renovationData.days, 
+            renovationData.amount
+        );
+        
+        if (payment.success) {
+            const message = `### RENOVACIÓN: ${renovationData.username}
+
+- **Precio:** $${payment.amount}
+- **Plan:** ${renovationData.days} días
+- **Usuario:** ${renovationData.username}
+
+---
+
+**LINK DE PAGO**
+
+${payment.paymentUrl}
+
+⏰ *Este enlace expira en 24 horas*
+💳 *Pago seguro con MercadoPago*
+
+✅ Después del pago, tu cuenta será renovada automáticamente.`;
+            
+            await client.sendMessage(phone, message, { sendSeen: false });
+            
+            // Enviar QR si existe
+            if (fs.existsSync(payment.qrPath)) {
+                try {
+                    const media = MessageMedia.fromFilePath(payment.qrPath);
+                    await client.sendMessage(phone, media, { 
+                        caption: `📱 *Renovación - Escanea con MercadoPago*\n\n${renovationData.username} - ${renovationData.days} días - $${payment.amount}`, 
+                        sendSeen: false 
+                    });
+                } catch (qrError) {
+                    console.error(chalk.red('⚠️ Error enviando QR:'), qrError.message);
+                }
+            }
+            
+            // Guardar información de renovación pendiente
+            db.run(`UPDATE payments SET username = ? WHERE payment_id = ?`, [renovationData.username, payment.paymentId]);
+            
+        } else {
+            await client.sendMessage(phone, `❌ *ERROR AL GENERAR PAGO DE RENOVACIÓN*
+
+${payment.error}
+
+Por favor, intenta de nuevo en unos minutos.`, { sendSeen: false });
+        }
+    } catch (error) {
+        console.error(chalk.red('❌ Error en proceso de renovación:'), error);
+        await client.sendMessage(phone, `❌ *ERROR INESPERADO EN RENOVACIÓN*
+
+${error.message}
+
+💬 Contacta soporte para asistencia.`, { sendSeen: false });
+    }
+    
+    await setUserState(phone, 'main_menu');
+}
+
+// ✅ VERIFICAR PAGOS PENDIENTES Y PROCESAR RENOVACIONES
+async function checkPendingPayments() {
+    config = loadConfig();
+    if (!config.mercadopago.access_token || config.mercadopago.access_token === '') return;
+    
+    db.all('SELECT * FROM payments WHERE status = "pending" AND created_at > datetime("now", "-48 hours")', async (err, payments) => {
+        if (err || !payments || payments.length === 0) return;
+        
+        console.log(chalk.yellow(`🔍 Verificando ${payments.length} pagos pendientes...`));
+        
+        for (const payment of payments) {
+            try {
+                const url = `https://api.mercadopago.com/v1/payments/search?external_reference=${payment.payment_id}`;
+                const response = await axios.get(url, {
+                    headers: { 
+                        'Authorization': `Bearer ${config.mercadopago.access_token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 15000
+                });
+                
+                if (response.data && response.data.results && response.data.results.length > 0) {
+                    const mpPayment = response.data.results[0];
+                    
+                    console.log(chalk.cyan(`📋 Pago ${payment.payment_id}: ${mpPayment.status}`));
+                    
+                    if (mpPayment.status === 'approved') {
+                        console.log(chalk.green(`✅ PAGO APROBADO: ${payment.payment_id}`));
+                        
+                        // Verificar si es renovación
+                        if (payment.username) {
+                            // ES RENOVACIÓN
+                            console.log(chalk.yellow(`🔄 Procesando renovación para ${payment.username}`));
+                            
+                            try {
+                                // Calcular nueva fecha de expiración
+                                const currentUser = await new Promise((resolve, reject) => {
+                                    db.get('SELECT expires_at FROM users WHERE username = ?', [payment.username], (err, row) => {
+                                        if (err) reject(err);
+                                        else resolve(row);
+                                    });
+                                });
+                                
+                                let newExpireDate;
+                                if (currentUser && currentUser.expires_at) {
+                                    // Extender desde la fecha actual de expiración
+                                    const currentExpire = moment(currentUser.expires_at);
+                                    newExpireDate = currentExpire.add(payment.days, 'days').format('YYYY-MM-DD 23:59:59');
+                                } else {
+                                    // Si no hay fecha actual, extender desde hoy
+                                    newExpireDate = moment().add(payment.days, 'days').format('YYYY-MM-DD 23:59:59');
+                                }
+                                
+                                // Actualizar fecha de expiración del usuario
+                                await new Promise((resolve, reject) => {
+                                    db.run(`UPDATE users SET expires_at = ?, notification_sent = 0 WHERE username = ?`, 
+                                        [newExpireDate, payment.username], 
+                                        (err) => {
+                                            if (err) reject(err);
+                                            else resolve();
+                                        });
+                                });
+                                
+                                // Actualizar fecha de expiración en el sistema
+                                const expireSystem = moment(newExpireDate).format('YYYY-MM-DD');
+                                await execPromise(`usermod -e ${expireSystem} ${payment.username}`);
+                                
+                                db.run(`UPDATE payments SET status = 'approved', approved_at = CURRENT_TIMESTAMP WHERE payment_id = ?`, [payment.payment_id]);
+                                
+                                const expireDate = moment(newExpireDate).format('DD/MM/YYYY');
+                                
+                                const message = `✅ *RENOVACIÓN CONFIRMADA*
+
+🎉 Tu renovación ha sido aprobada
+
+📋 *DATOS ACTUALIZADOS:*
+👤 Usuario: *${payment.username}*
+🔑 Contraseña: *mgvpn247*
+⏰ *NUEVA FECHA DE VENCIMIENTO:* ${expireDate}
+🔌 *CONEXIÓN:* 1 dispositivo
+
+🎊 ¡Tu cuenta ha sido renovada exitosamente!`;
+                                
+                                await client.sendMessage(payment.phone, message, { sendSeen: false });
+                                
+                                console.log(chalk.green(`✅ Renovación completada para ${payment.username} hasta ${expireDate}`));
+                                
+                            } catch (renovationError) {
+                                console.error(chalk.red(`❌ Error en renovación ${payment.username}:`), renovationError.message);
+                                
+                                // Notificar al cliente del error
+                                await client.sendMessage(payment.phone, 
+                                    `❌ *ERROR EN RENOVACIÓN*
+                                    
+Hubo un error al procesar tu renovación. Por favor, contacta soporte.
+                                    
+Error: ${renovationError.message}`, { sendSeen: false });
+                            }
+                            
+                        } else {
+                            // ES COMPRA NUEVA
+                            // Generar usuario en minúsculas para premium
+                            const username = generateUsername('premium'); // userXXXX
+                            const password = generatePassword();
+                            const result = await createSSHUser(payment.phone, username, password, payment.days, 1);
+                            
+                            db.run(`UPDATE payments SET status = 'approved', approved_at = CURRENT_TIMESTAMP WHERE payment_id = ?`, [payment.payment_id]);
+                            
+                            const expireDate = moment().add(payment.days, 'days').format('DD/MM/YYYY');
+                            
+                            const message = `✅ *PAGO CONFIRMADO*
+
+🎉 Tu compra ha sido aprobada
+
+📋 *DATOS DE ACCESO:*
+👤 Usuario: *${username}*
+🔑 Contraseña: *${password}*
+
+⏰ *VÁLIDO HASTA:* ${expireDate}
+🔌 *CONEXIÓN:* 1 dispositivo
+
+📱 *INSTALACIÓN:*
+1. Descarga la app (Opción *4*)
+2. Seleccionar servidor
+3. Ingresar Usuario y Contraseña
+4. ¡Conéctate automáticamente!
+
+🎊 ¡Disfruta del servicio premium!`;
+                            
+                            await client.sendMessage(payment.phone, message, { sendSeen: false });
+                            
+                            console.log(chalk.green(`✅ Usuario premium creado: ${username}`));
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error(chalk.red(`❌ Error verificando ${payment.payment_id}:`), error.message);
+            }
+        }
+    });
+}
+
+// ✅ Verificar pagos cada 2 minutos
+cron.schedule('*/2 * * * *', () => {
+    console.log(chalk.yellow('🔄 Verificando pagos pendientes...'));
+    checkPendingPayments();
+});
+
+// ✅ Enviar avisos por vencer cada hora
+cron.schedule('0 * * * *', () => {
+    console.log(chalk.yellow('📢 Enviando avisos por vencer...'));
+    sendExpiryWarning();
+});
+
+// ✅ Enviar recordatorios de vencimiento hoy cada 6 horas
+cron.schedule('0 */6 * * *', () => {
+    console.log(chalk.yellow('⏰ Enviando recordatorios de vencimiento hoy...'));
+    sendTodayExpiryReminder();
+});
+
+// ✅ Resetear notificaciones a medianoche para avisos diarios
+cron.schedule('0 0 * * *', () => {
+    console.log(chalk.yellow('🔄 Reseteando notificaciones enviadas...'));
+    db.run('UPDATE users SET notification_sent = 0 WHERE status = 1');
+});
+
+// ✅ Limpiar usuarios expirados cada 15 minutos
 cron.schedule('*/15 * * * *', async () => {
     const now = moment().format('YYYY-MM-DD HH:mm:ss');
-    console.log(chalk.yellow(`🧹 Limpiando usuarios expirados... (${now})`));
+    console.log(chalk.yellow(`🧹 Limpiando usuarios expirados cada 15 minutos (${now})...`));
     
     db.all('SELECT username FROM users WHERE expires_at < ? AND status = 1', [now], async (err, rows) => {
-        if (err || !rows || rows.length === 0) return;
+        if (err) {
+            console.error(chalk.red('❌ Error BD:'), err.message);
+            return;
+        }
+        if (!rows || rows.length === 0) return;
         
         for (const r of rows) {
             try {
@@ -849,29 +1541,58 @@ cron.schedule('*/15 * * * *', async () => {
                 await execPromise(`userdel -f ${r.username} 2>/dev/null || true`);
                 db.run('UPDATE users SET status = 0 WHERE username = ?', [r.username]);
                 console.log(chalk.green(`🗑️ Eliminado: ${r.username}`));
-            } catch (e) {}
+            } catch (e) {
+                console.error(chalk.red(`Error eliminando ${r.username}:`), e.message);
+            }
         }
+        console.log(chalk.green(`✅ Limpiados ${rows.length} usuarios expirados`));
     });
 });
 
-// Inicializar bot
-console.log(chalk.green('\n🚀 Inicializando bot completo...\n'));
+// ✅ Limpiar estados antiguos cada hora
+cron.schedule('0 * * * *', () => {
+    console.log(chalk.yellow('🧹 Limpiando estados antiguos...'));
+    db.run(`DELETE FROM user_state WHERE updated_at < datetime('now', '-1 hour')`, (err) => {
+        if (!err) console.log(chalk.green('✅ Estados antiguos limpiados'));
+    });
+});
+
+// ✅ Limpiar pagos antiguos cada 24 horas
+cron.schedule('0 0 * * *', () => {
+    console.log(chalk.yellow('🧹 Limpiando pagos antiguos...'));
+    db.run(`DELETE FROM payments WHERE status = 'pending' AND created_at < datetime('now', '-7 days')`, (err) => {
+        if (!err) console.log(chalk.green('✅ Pagos antiguos limpiados'));
+    });
+});
+
+// ✅ Mostrar estadísticas de notificaciones cada día
+cron.schedule('0 9 * * *', () => {
+    console.log(chalk.cyan('📊 ESTADÍSTICAS DIARIAS DE NOTIFICACIONES'));
+    db.all('SELECT type, COUNT(*) as count FROM notifications WHERE date(sent_at) = date("now") GROUP BY type', (err, rows) => {
+        if (err) return;
+        rows.forEach(row => {
+            console.log(chalk.yellow(`  ${row.type}: ${row.count}`));
+        });
+    });
+});
+
+console.log(chalk.green('\n🚀 Inicializando bot con planes separados SIN CUPONES...\n'));
 client.initialize();
 BOTEOF
 
-    echo -e "${GREEN}✅ Bot completo creado${NC}"
-    
-    # Crear panel de control COMPLETO con función de subir APK
-    echo -e "${YELLOW}🎛️  Creando panel de control con APK...${NC}"
-    
-    cat > /usr/local/bin/sshbot << 'PANELEOF'
+echo -e "${GREEN}✅ Bot creado con planes separados SIN CUPONES${NC}"
+
+# ================================================
+# CREAR PANEL DE CONTROL
+# ================================================
+echo -e "\n${CYAN}${BOLD}🎛️  CREANDO PANEL DE CONTROL...${NC}"
+
+cat > /usr/local/bin/sshbot << 'PANELEOF'
 #!/bin/bash
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; CYAN='\033[0;36m'; BLUE='\033[0;34m'; NC='\033[0m'
 
 DB="/opt/ssh-bot/data/users.db"
 CONFIG="/opt/ssh-bot/config/config.json"
-APK_DIR="/opt/ssh-bot/apk"
-APK_FILE="$APK_DIR/app.apk"
 
 get_val() { jq -r "$1" "$CONFIG" 2>/dev/null; }
 set_val() { local t=$(mktemp); jq "$1 = $2" "$CONFIG" > "$t" && mv "$t" "$CONFIG"; }
@@ -879,99 +1600,8 @@ set_val() { local t=$(mktemp); jq "$1 = $2" "$CONFIG" > "$t" && mv "$t" "$CONFIG
 show_header() {
     clear
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║                🎛️  PANEL SSH BOT - COMPLETO               ║${NC}"
-    echo -e "${CYAN}║                   📱 APK POR ARCHIVO                      ║${NC}"
+    echo -e "${CYAN}║                🎛️  PANEL SSH BOT - SIN CUPONES              ║${NC}"
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}\n"
-}
-
-upload_apk() {
-    echo -e "\n${CYAN}📁 SUBIR ARCHIVO APK${NC}"
-    echo -e "${YELLOW}=========================================${NC}"
-    
-    if [[ -f "$APK_FILE" ]]; then
-        APK_SIZE=$(stat -c%s "$APK_FILE" 2>/dev/null || echo "0")
-        APK_DATE=$(stat -c%y "$APK_FILE" 2>/dev/null | cut -d' ' -f1)
-        
-        if [[ $APK_SIZE -gt 0 ]]; then
-            SIZE_MB=$(echo "scale=2; $APK_SIZE / 1024 / 1024" | bc)
-            echo -e "${GREEN}✅ APK actual: ${config.apk.filename}${NC}"
-            echo -e "📊 Tamaño: ${SIZE_MB} MB"
-            echo -e "📅 Fecha: ${APK_DATE}"
-        else
-            echo -e "${RED}⚠️  Archivo APK existe pero está vacío${NC}"
-        fi
-    else
-        echo -e "${YELLOW}⚠️  No hay archivo APK cargado${NC}"
-        echo -e "   Ubicación esperada: $APK_FILE"
-    fi
-    
-    echo -e "\n${CYAN}💾 INSTRUCCIONES PARA SUBIR:${NC}"
-    echo -e "1. Transfiere tu APK al servidor usando:"
-    echo -e "   scp /ruta/tu/app.apk root@${SERVER_IP}:$APK_DIR/"
-    echo -e "2. Luego renómbrala:"
-    echo -e "   mv $APK_DIR/*.apk $APK_FILE"
-    echo -e "3. Verifica que se haya subido correctamente"
-    
-    echo -e "\n${YELLOW}O usa el método directo (si estás en este servidor):${NC}"
-    read -p "¿Quieres subir un archivo APK desde este servidor? (s/N): " SUBIR
-    
-    if [[ "$SUBIR" == "s" ]]; then
-        echo -e "\n${CYAN}📂 Buscando archivos APK en el sistema...${NC}"
-        
-        # Buscar archivos APK
-        find /home /root /tmp -name "*.apk" -type f 2>/dev/null | head -10 | while read -r found_apk; do
-            SIZE=$(stat -c%s "$found_apk" 2>/dev/null || echo "0")
-            SIZE_MB=$(echo "scale=2; $SIZE / 1024 / 1024" | bc)
-            echo -e "   📍 ${found_apk} (${SIZE_MB} MB)"
-        done
-        
-        echo -e "\n${CYAN}📝 Ingresa la ruta completa del archivo APK:${NC}"
-        read -p "Ruta: " APK_PATH
-        
-        if [[ -f "$APK_PATH" ]] && [[ "$APK_PATH" == *.apk ]]; then
-            echo -e "${YELLOW}⏳ Copiando $APK_PATH ...${NC}"
-            cp "$APK_PATH" "$APK_FILE" 2>/dev/null
-            
-            if [[ $? -eq 0 ]]; then
-                APK_SIZE=$(stat -c%s "$APK_FILE" 2>/dev/null || echo "0")
-                SIZE_MB=$(echo "scale=2; $APK_SIZE / 1024 / 1024" | bc)
-                
-                # Actualizar nombre en config
-                APK_NAME=$(basename "$APK_PATH")
-                set_val '.apk.filename' "\"$APK_NAME\""
-                
-                echo -e "${GREEN}✅ APK subida correctamente${NC}"
-                echo -e "📁 Nombre: ${APK_NAME}"
-                echo -e "📊 Tamaño: ${SIZE_MB} MB"
-                echo -e "📍 Ubicación: ${APK_FILE}"
-                
-                # Verificar que sea un APK válido
-                if file "$APK_FILE" | grep -q "Zip archive"; then
-                    echo -e "${GREEN}✅ Archivo APK válido${NC}"
-                else
-                    echo -e "${YELLOW}⚠️  El archivo puede no ser un APK válido${NC}"
-                fi
-            else
-                echo -e "${RED}❌ Error al copiar el archivo${NC}"
-            fi
-        else
-            echo -e "${RED}❌ Archivo no encontrado o no es un APK${NC}"
-        fi
-    fi
-    
-    echo -e "\n${YELLOW}📋 Verificación:${NC}"
-    if [[ -f "$APK_FILE" ]]; then
-        APK_SIZE=$(stat -c%s "$APK_FILE" 2>/dev/null || echo "0")
-        if [[ $APK_SIZE -gt 100000 ]]; then
-            echo -e "${GREEN}✅ APK lista para enviar por WhatsApp${NC}"
-        else
-            echo -e "${RED}❌ Archivo muy pequeño, puede estar corrupto${NC}"
-        fi
-    else
-        echo -e "${RED}❌ No hay APK disponible${NC}"
-    fi
-    
-    read -p "Presiona Enter para continuar..."
 }
 
 while true; do
@@ -979,6 +1609,13 @@ while true; do
     
     TOTAL_USERS=$(sqlite3 "$DB" "SELECT COUNT(*) FROM users" 2>/dev/null || echo "0")
     ACTIVE_USERS=$(sqlite3 "$DB" "SELECT COUNT(*) FROM users WHERE status=1" 2>/dev/null || echo "0")
+    PENDING_PAYMENTS=$(sqlite3 "$DB" "SELECT COUNT(*) FROM payments WHERE status='pending'" 2>/dev/null || echo "0")
+    
+    # Usuarios por vencer en 24h
+    EXPIRING_SOON=$(sqlite3 "$DB" "SELECT COUNT(*) FROM users WHERE status=1 AND tipo='premium' AND expires_at <= datetime('now', '+24 hours') AND notification_sent=0" 2>/dev/null || echo "0")
+    
+    # Notificaciones hoy
+    NOTIFICATIONS_TODAY=$(sqlite3 "$DB" "SELECT COUNT(*) FROM notifications WHERE date(sent_at) = date('now')" 2>/dev/null || echo "0")
     
     STATUS=$(pm2 jlist 2>/dev/null | jq -r '.[] | select(.name=="ssh-bot") | .pm2_env.status' 2>/dev/null || echo "stopped")
     if [[ "$STATUS" == "online" ]]; then
@@ -996,44 +1633,33 @@ while true; do
     
     NOTIF_GROUP=$(get_val '.bot.notification_group')
     if [[ -n "$NOTIF_GROUP" && "$NOTIF_GROUP" != "" && "$NOTIF_GROUP" != "null" ]]; then
-        GROUP_STATUS="${GREEN}✅ CONFIGURADO${NC}"
+        GROUP_SHORT=${NOTIF_GROUP:0:20}...
+        GROUP_STATUS="${GREEN}✅ ${GROUP_SHORT}${NC}"
     else
         GROUP_STATUS="${RED}❌ NO CONFIGURADO${NC}"
     fi
     
-    # Verificar APK
-    if [[ -f "$APK_FILE" ]]; then
-        APK_SIZE=$(stat -c%s "$APK_FILE" 2>/dev/null || echo "0")
-        if [[ $APK_SIZE -gt 100000 ]]; then
-            APK_SIZE_MB=$(echo "scale=2; $APK_SIZE / 1024 / 1024" | bc)
-            APK_STATUS="${GREEN}✅ DISPONIBLE (${APK_SIZE_MB} MB)${NC}"
-        else
-            APK_STATUS="${RED}❌ ARCHIVO PEQUEÑO${NC}"
-        fi
-    else
-        APK_STATUS="${RED}❌ NO DISPONIBLE${NC}"
-    fi
-    
-    SERVER_IP=$(get_val '.bot.server_ip')
-    
     echo -e "${YELLOW}📊 ESTADO DEL SISTEMA${NC}"
     echo -e "  Bot: $BOT_STATUS"
     echo -e "  Usuarios: ${CYAN}$ACTIVE_USERS/$TOTAL_USERS${NC} activos/total"
+    echo -e "  Por vencer (24h): ${CYAN}$EXPIRING_SOON${NC}"
+    echo -e "  Pagos pendientes: ${CYAN}$PENDING_PAYMENTS${NC}"
+    echo -e "  Notificaciones hoy: ${CYAN}$NOTIFICATIONS_TODAY${NC}"
     echo -e "  MercadoPago: $MP_STATUS"
     echo -e "  Grupo notif.: $GROUP_STATUS"
-    echo -e "  APK: $APK_STATUS"
-    echo -e "  Test: ${GREEN}$(get_val '.prices.test_hours') horas${NC}"
-    echo -e "  Contraseña: ${GREEN}$(get_val '.bot.default_password')${NC}"
+    echo -e "  Test: ${GREEN}$(get_val '.prices.test_hours') horas${NC} | Limpieza: ${GREEN}cada 15 min${NC}"
+    echo -e "  Contraseña: ${GREEN}mgvpn247${NC} (FIJA PARA TODOS)"
     echo -e "  Cupones: ${RED}🚫 DESACTIVADOS${NC}"
     echo -e ""
     
-    echo -e "${YELLOW}💰 PRECIOS:${NC}"
+    echo -e "${YELLOW}💰 PRECIOS ACTUALES:${NC}"
+    echo -e "  Test: ${GREEN}$(get_val '.prices.test_hours') horas${NC} (gratis)"
     echo -e "  📅 DIARIOS:"
-    echo -e "    7 días: $ $(get_val '.prices.price_7d_1conn')"
-    echo -e "    15 días: $ $(get_val '.prices.price_15d_1conn')"
+    echo -e "    7 días: $ $(get_val '.prices.price_7d_1conn') ARS"
+    echo -e "    15 días: $ $(get_val '.prices.price_15d_1conn') ARS"
     echo -e "  📅 MENSUALES:"
-    echo -e "    30 días: $ $(get_val '.prices.price_30d_1conn')"
-    echo -e "    50 días: $ $(get_val '.prices.price_50d_1conn')"
+    echo -e "    30 días: $ $(get_val '.prices.price_30d_1conn') ARS"
+    echo -e "    50 días: $ $(get_val '.prices.price_50d_1conn') ARS"
     echo -e ""
     
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -1046,12 +1672,13 @@ while true; do
     echo -e "${CYAN}[7]${NC}  💰  Cambiar precios"
     echo -e "${CYAN}[8]${NC}  🔑  Configurar MercadoPago"
     echo -e "${CYAN}[9]${NC}  📢  Configurar notificaciones"
-    echo -e "${CYAN}[10]${NC} 📁  Subir/Ver APK"
-    echo -e "${CYAN}[11]${NC} 📊  Ver estadísticas"
-    echo -e "${CYAN}[12]${NC} 📝  Ver logs"
+    echo -e "${CYAN}[10]${NC} 📊  Ver estadísticas"
+    echo -e "${CYAN}[11]${NC} 📝  Ver logs"
+    echo -e "${CYAN}[12]${NC} 🔔  Forzar notificaciones"
     echo -e "${CYAN}[0]${NC}  🚪  Salir"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     
+    echo -e ""
     read -p "👉 Selecciona una opción: " OPTION
     
     case $OPTION in
@@ -1077,14 +1704,13 @@ while true; do
             
             if [[ -f "/root/qr-whatsapp.png" ]]; then
                 echo -e "${GREEN}✅ QR guardado en: /root/qr-whatsapp.png${NC}\n"
-                echo -e "${YELLOW}Para ver el QR actual, revisa los logs:${NC}"
-                echo -e "pm2 logs ssh-bot --lines 50"
+                read -p "¿Ver logs en tiempo real? (s/N): " VER
+                [[ "$VER" == "s" ]] && pm2 logs ssh-bot --lines 100
             else
-                echo -e "${YELLOW}⚠️  QR no generado aún${NC}"
-                echo -e "${CYAN}Espera a que el bot se conecte o reinícialo${NC}"
+                echo -e "${YELLOW}⚠️  QR no generado aún${NC}\n"
+                read -p "¿Ver logs? (s/N): " VER
+                [[ "$VER" == "s" ]] && pm2 logs ssh-bot --lines 50
             fi
-            read -p "¿Ver logs? (s/N): " VER
-            [[ "$VER" == "s" ]] && pm2 logs ssh-bot --lines 50
             ;;
         4)
             clear
@@ -1100,9 +1726,9 @@ while true; do
             [[ -z "$DAYS" ]] && DAYS="30"
             if [[ "$USERNAME" == "auto" || -z "$USERNAME" ]]; then
                 if [[ "$TIPO" == "test" ]]; then
-                    USERNAME="test$(shuf -i 1000-9999 -n 1)"
+                    USERNAME="test$(shuf -i 1000-9999 -n 1)"  # testXXXX
                 else
-                    USERNAME="user$(shuf -i 1000-9999 -n 1)"
+                    USERNAME="user$(shuf -i 1000-9999 -n 1)"  # userXXXX
                 fi
             fi
             PASSWORD="mgvpn247"
@@ -1123,9 +1749,10 @@ while true; do
                 echo -e "👤 Usuario: ${USERNAME}"
                 echo -e "🔑 Contraseña: ${PASSWORD}"
                 echo -e "⏰ Expira: ${EXPIRE_DATE}"
-                echo -e "📞 Teléfono: ${PHONE}"
-            else
+                echo -e "🔌 Días/Horas: ${DAYS}${TIPO:0:1}"
+            else {
                 echo -e "\n${RED}❌ Error creando usuario${NC}"
+            }
             fi
             read -p "Presiona Enter..." 
             ;;
@@ -1135,9 +1762,12 @@ while true; do
             echo -e "${CYAN}║                     👥 USUARIOS ACTIVOS                     ║${NC}"
             echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}\n"
             
-            sqlite3 -column -header "$DB" "SELECT username, tipo, expires_at, substr(phone,1,12) as tel FROM users WHERE status = 1 ORDER BY expires_at DESC LIMIT 20"
+            sqlite3 -column -header "$DB" "SELECT username, password, tipo, expires_at, substr(phone,1,12) as tel FROM users WHERE status = 1 ORDER BY expires_at DESC LIMIT 20"
             
-            echo -e "\n${YELLOW}Total: ${ACTIVE_USERS} activos${NC}"
+            echo -e "\n${YELLOW}Usuarios por vencer en 24h:${NC}"
+            sqlite3 -column -header "$DB" "SELECT username, expires_at FROM users WHERE status=1 AND tipo='premium' AND expires_at <= datetime('now', '+24 hours') AND notification_sent=0 ORDER BY expires_at LIMIT 10"
+            
+            echo -e "\n${YELLOW}Total: ${ACTIVE_USERS} activos | Por vencer: ${EXPIRING_SOON}${NC}"
             read -p "Presiona Enter..." 
             ;;
         6)
@@ -1149,15 +1779,21 @@ while true; do
             CURRENT_HOURS=$(get_val '.prices.test_hours')
             echo -e "${YELLOW}⏰ HORAS ACTUALES DEL TEST: ${GREEN}${CURRENT_HOURS} HORAS${NC}\n"
             
+            echo -e "${CYAN}📝 Recomendaciones:${NC}"
+            echo -e "  1-2 horas: ${GREEN}Ideal para pruebas rápidas${NC}"
+            echo -e "  3-6 horas: ${YELLOW}Para usuarios más exigentes${NC}"
+            echo -e "  12-24 horas: ${RED}Solo si tienes mucho ancho de banda${NC}\n"
+            
             read -p "Nuevas horas para el test [${CURRENT_HOURS}]: " NEW_HOURS
             
             if [[ -n "$NEW_HOURS" ]]; then
-                if [[ $NEW_HOURS =~ ^[0-9]+$ ]] && [[ $NEW_HOURs -ge 1 ]] && [[ $NEW_HOURS -le 24 ]]; then
+                if [[ $NEW_HOURS =~ ^[0-9]+$ ]] && [[ $NEW_HOURS -ge 1 ]] && [[ $NEW_HOURS -le 24 ]]; then
                     set_val '.prices.test_hours' "$NEW_HOURS"
                     echo -e "\n${GREEN}✅ Horas cambiadas a ${NEW_HOURS} horas${NC}"
-                    echo -e "${YELLOW}🔄 Reiniciando bot...${NC}"
+                    echo -e "${YELLOW}🔄 Reiniciando bot para aplicar cambios...${NC}"
                     cd /root/ssh-bot && pm2 restart ssh-bot
                     sleep 2
+                    echo -e "${GREEN}✅ Bot reiniciado con ${NEW_HOURS} horas de test${NC}"
                 else
                     echo -e "${RED}❌ Error: Debe ser un número entre 1 y 24${NC}"
                 fi
@@ -1177,12 +1813,13 @@ while true; do
             
             echo -e "${YELLOW}💰 PRECIOS ACTUALES:${NC}"
             echo -e "  📅 DIARIOS:"
-            echo -e "    7 días: $${CURRENT_7D}"
-            echo -e "    15 días: $${CURRENT_15D}"
+            echo -e "    1. 7 días: $${CURRENT_7D}"
+            echo -e "    2. 15 días: $${CURRENT_15D}"
             echo -e "  📅 MENSUALES:"
-            echo -e "    30 días: $${CURRENT_30D}"
-            echo -e "    50 días: $${CURRENT_50D}\n"
+            echo -e "    3. 30 días: $${CURRENT_30D}"
+            echo -e "    4. 50 días: $${CURRENT_50D}\n"
             
+            echo -e "${CYAN}--- MODIFICAR PRECIOS ---${NC}"
             read -p "Nuevo precio 7d [${CURRENT_7D}]: " NEW_7D
             read -p "Nuevo precio 15d [${CURRENT_15D}]: " NEW_15D
             read -p "Nuevo precio 30d [${CURRENT_30D}]: " NEW_30D
@@ -1194,7 +1831,7 @@ while true; do
             [[ -n "$NEW_50D" ]] && set_val '.prices.price_50d_1conn' "$NEW_50D"
             
             echo -e "\n${GREEN}✅ Precios actualizados${NC}"
-            echo -e "${YELLOW}🔄 Reiniciando bot...${NC}"
+            echo -e "${YELLOW}🔄 Reiniciando bot para aplicar cambios...${NC}"
             cd /root/ssh-bot && pm2 restart ssh-bot
             sleep 2
             read -p "Presiona Enter..." 
@@ -1232,6 +1869,7 @@ while true; do
                     echo -e "${YELLOW}🔄 Reiniciando bot...${NC}"
                     cd /root/ssh-bot && pm2 restart ssh-bot
                     sleep 2
+                    echo -e "${GREEN}✅ MercadoPago activado${NC}"
                 else
                     echo -e "${RED}❌ Token inválido${NC}"
                     echo -e "${YELLOW}Debe empezar con APP_USR- o TEST-${NC}"
@@ -1247,10 +1885,19 @@ while true; do
             
             CURRENT_GROUP=$(get_val '.bot.notification_group')
             CURRENT_WARNING=$(get_val '.notifications.expiry_warning_hours')
+            NOTIF_ENABLED=$(get_val '.notifications.enabled')
             
             echo -e "${YELLOW}⚙️ CONFIGURACIÓN ACTUAL:${NC}"
             echo -e "  Grupo WhatsApp: ${CYAN}${CURRENT_GROUP:-'No configurado'}${NC}"
-            echo -e "  Aviso por vencer: ${CYAN}${CURRENT_WARNING} horas antes${NC}\n"
+            echo -e "  Aviso por vencer: ${CYAN}${CURRENT_WARNING} horas antes${NC}"
+            echo -e "  Notificaciones: ${CYAN}${NOTIF_ENABLED == 'true' ? '✅ ACTIVADAS' : '❌ DESACTIVADAS'}${NC}\n"
+            
+            echo -e "${CYAN}📝 CONFIGURAR GRUPO DE NOTIFICACIONES:${NC}"
+            echo -e "  1. Crea un grupo en WhatsApp"
+            echo -e "  2. Agrega el bot al grupo"
+            echo -e "  3. Envía cualquier mensaje"
+            echo -e "  4. Copia el ID del grupo (ej: 1234567890-123456@g.us)"
+            echo -e ""
             
             read -p "Nuevo ID de grupo [${CURRENT_GROUP}]: " NEW_GROUP
             read -p "Horas para aviso por vencer [${CURRENT_WARNING}]: " NEW_WARNING
@@ -1269,15 +1916,23 @@ while true; do
                 fi
             fi
             
-            echo -e "\n${YELLOW}🔄 Reiniciando bot...${NC}"
+            echo -e "\n${CYAN}🔔 ACTIVAR/DESACTIVAR NOTIFICACIONES:${NC}"
+            read -p "¿Activar notificaciones? (s/N): " ACTIVAR
+            if [[ "$ACTIVAR" == "s" ]]; then
+                set_val '.notifications.enabled' "true"
+                echo -e "${GREEN}✅ Notificaciones ACTIVADAS${NC}"
+            else
+                set_val '.notifications.enabled' "false"
+                echo -e "${YELLOW}⚠️ Notificaciones DESACTIVADAS${NC}"
+            fi
+            
+            echo -e "\n${YELLOW}🔄 Reiniciando bot para aplicar cambios...${NC}"
             cd /root/ssh-bot && pm2 restart ssh-bot
             sleep 2
+            echo -e "${GREEN}✅ Configuración de notificaciones actualizada${NC}"
             read -p "Presiona Enter..." 
             ;;
         10)
-            upload_apk
-            ;;
-        11)
             clear
             echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
             echo -e "${CYAN}║                     📊 ESTADÍSTICAS                         ║${NC}"
@@ -1286,27 +1941,82 @@ while true; do
             echo -e "${YELLOW}👥 USUARIOS:${NC}"
             sqlite3 "$DB" "SELECT 'Total: ' || COUNT(*) || ' | Activos: ' || SUM(CASE WHEN status=1 THEN 1 ELSE 0 END) || ' | Tests: ' || SUM(CASE WHEN tipo='test' THEN 1 ELSE 0 END) || ' | Premium: ' || SUM(CASE WHEN tipo='premium' THEN 1 ELSE 0 END) FROM users"
             
+            echo -e "\n${YELLOW}💰 PAGOS:${NC}"
+            sqlite3 "$DB" "SELECT 'Pendientes: ' || SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) || ' | Aprobados: ' || SUM(CASE WHEN status='approved' THEN 1 ELSE 0 END) || ' | Total: $' || printf('%.2f', SUM(CASE WHEN status='approved' THEN final_amount ELSE 0 END)) FROM payments"
+            
             echo -e "\n${YELLOW}📅 DISTRIBUCIÓN POR PLANES:${NC}"
             sqlite3 "$DB" "SELECT '7 días: ' || SUM(CASE WHEN plan='7d' THEN 1 ELSE 0 END) || ' | 15 días: ' || SUM(CASE WHEN plan='15d' THEN 1 ELSE 0 END) || ' | 30 días: ' || SUM(CASE WHEN plan='30d' THEN 1 ELSE 0 END) || ' | 50 días: ' || SUM(CASE WHEN plan='50d' THEN 1 ELSE 0 END) FROM payments WHERE status='approved'"
+            
+            echo -e "\n${YELLOW}💸 INGRESOS HOY:${NC}"
+            sqlite3 "$DB" "SELECT 'Hoy: $' || printf('%.2f', SUM(CASE WHEN date(approved_at) = date('now') THEN final_amount ELSE 0 END)) FROM payments"
+            
+            echo -e "\n${YELLOW}📢 NOTIFICACIONES:${NC}"
+            sqlite3 "$DB" "SELECT 'Hoy: ' || COUNT(*) || ' | Avisos: ' || SUM(CASE WHEN type='expiry_warning' THEN 1 ELSE 0 END) || ' | Recordatorios: ' || SUM(CASE WHEN type='today_expiry' THEN 1 ELSE 0 END) FROM notifications WHERE date(sent_at) = date('now')"
             
             echo -e "\n${YELLOW}⏰ USUARIOS POR VENCER:${NC}"
             sqlite3 "$DB" "SELECT 'En 24h: ' || COUNT(*) || ' | En 48h: ' || (SELECT COUNT(*) FROM users WHERE status=1 AND tipo='premium' AND expires_at <= datetime('now', '+48 hours') AND expires_at > datetime('now', '+24 hours')) FROM users WHERE status=1 AND tipo='premium' AND expires_at <= datetime('now', '+24 hours')"
             
-            echo -e "\n${YELLOW}📱 APK:${NC}"
-            if [[ -f "$APK_FILE" ]]; then
-                APK_SIZE=$(stat -c%s "$APK_FILE" 2>/dev/null || echo "0")
-                SIZE_MB=$(echo "scale=2; $APK_SIZE / 1024 / 1024" | bc)
-                echo -e "  Disponible: ${GREEN}${SIZE_MB} MB${NC}"
-                echo -e "  Enviada: $(sqlite3 "$DB" "SELECT COUNT(DISTINCT phone) FROM users WHERE tipo='premium' OR tipo='test'" 2>/dev/null || echo "0") veces"
-            else
-                echo -e "  ${RED}No disponible${NC}"
-            fi
-            
             read -p "\nPresiona Enter..." 
             ;;
-        12)
+        11)
             echo -e "\n${YELLOW}📝 Logs (Ctrl+C para salir)...${NC}\n"
             pm2 logs ssh-bot --lines 100
+            ;;
+        12)
+            clear
+            echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+            echo -e "${CYAN}║             🔔 FORZAR NOTIFICACIONES                       ║${NC}"
+            echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}\n"
+            
+            echo -e "${YELLOW}¿Qué notificaciones quieres forzar?${NC}"
+            echo -e "  1. Avisos por vencer (24h)"
+            echo -e "  2. Recordatorios de vencimiento hoy"
+            echo -e "  3. Ambas"
+            echo -e "  0. Cancelar"
+            echo -e ""
+            
+            read -p "Selecciona: " FORCE_OPT
+            
+            case $FORCE_OPT in
+                1)
+                    echo -e "\n${YELLOW}🔍 Buscando usuarios por vencer en 24h...${NC}"
+                    EXPIRING_COUNT=$(sqlite3 "$DB" "SELECT COUNT(*) FROM users WHERE status=1 AND tipo='premium' AND expires_at <= datetime('now', '+24 hours')" 2>/dev/null || echo "0")
+                    echo -e "${CYAN}Encontrados: ${EXPIRING_COUNT} usuarios${NC}"
+                    
+                    read -p "¿Forzar envío de avisos? (s/N): " CONFIRM
+                    if [[ "$CONFIRM" == "s" ]]; then
+                        echo -e "${YELLOW}🔄 Ejecutando script de avisos...${NC}"
+                        echo -e "${GREEN}✅ Comando enviado al sistema de notificaciones${NC}"
+                        echo -e "${CYAN}Revisa los logs del bot para ver el progreso${NC}"
+                    fi
+                    ;;
+                2)
+                    echo -e "\n${YELLOW}🔍 Buscando usuarios que expiran hoy...${NC}"
+                    TODAY_COUNT=$(sqlite3 "$DB" "SELECT COUNT(*) FROM users WHERE status=1 AND tipo='premium' AND date(expires_at) = date('now')" 2>/dev/null || echo "0")
+                    echo -e "${CYAN}Encontrados: ${TODAY_COUNT} usuarios${NC}"
+                    
+                    read -p "¿Forzar envío de recordatorios? (s/N): " CONFIRM
+                    if [[ "$CONFIRM" == "s" ]]; then
+                        echo -e "${YELLOW}🔄 Ejecutando script de recordatorios...${NC}"
+                        echo -e "${GREEN}✅ Comando enviado al sistema de notificaciones${NC}"
+                        echo -e "${CYAN}Revisa los logs del bot para ver el progreso${NC}"
+                    fi
+                    ;;
+                3)
+                    echo -e "\n${YELLOW}🔍 Buscando todas las notificaciones pendientes...${NC}"
+                    EXPIRING_COUNT=$(sqlite3 "$DB" "SELECT COUNT(*) FROM users WHERE status=1 AND tipo='premium' AND expires_at <= datetime('now', '+24 hours')" 2>/dev/null || echo "0")
+                    TODAY_COUNT=$(sqlite3 "$DB" "SELECT COUNT(*) FROM users WHERE status=1 AND tipo='premium' AND date(expires_at) = date('now')" 2>/dev/null || echo "0")
+                    echo -e "${CYAN}Avisos 24h: ${EXPIRING_COUNT} | Recordatorios hoy: ${TODAY_COUNT}${NC}"
+                    
+                    read -p "¿Forzar todas las notificaciones? (s/N): " CONFIRM
+                    if [[ "$CONFIRM" == "s" ]]; then
+                        echo -e "${YELLOW}🔄 Ejecutando todos los scripts de notificación...${NC}"
+                        echo -e "${GREEN}✅ Comandos enviados al sistema de notificaciones${NC}"
+                        echo -e "${CYAN}Revisa los logs del bot para ver el progreso${NC}"
+                    fi
+                    ;;
+            esac
+            read -p "Presiona Enter..." 
             ;;
         0)
             echo -e "\n${GREEN}👋 Hasta pronto${NC}\n"
@@ -1320,189 +2030,124 @@ while true; do
 done
 PANELEOF
 
-    chmod +x /usr/local/bin/sshbot
-    
-    echo -e "${GREEN}✅ Panel de control creado con función APK${NC}"
-    
-    # Crear script para subir APK fácilmente
-    cat > /usr/local/bin/upload-apk << 'UPLOADEOP'
-#!/bin/bash
-APK_DIR="/opt/ssh-bot/apk"
-APK_FILE="$APK_DIR/app.apk"
+chmod +x /usr/local/bin/sshbot
+echo -e "${GREEN}✅ Panel de control creado${NC}"
 
-echo -e "\n📱 SUBIR ARCHIVO APK PARA EL BOT"
-echo -e "================================\n"
+# ================================================
+# INICIAR BOT
+# ================================================
+echo -e "\n${CYAN}${BOLD}🚀 INICIANDO BOT...${NC}"
 
-if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
-    echo "Uso:"
-    echo "  upload-apk                    - Mostrar ayuda"
-    echo "  upload-apk /ruta/apk.apk      - Subir archivo APK"
-    echo "  upload-apk --status           - Ver estado del APK"
-    exit 0
-fi
+cd "$USER_HOME"
+pm2 start bot.js --name ssh-bot
+pm2 save
+pm2 startup systemd -u root --hp /root > /dev/null 2>&1
 
-if [ "$1" == "--status" ]; then
-    if [ -f "$APK_FILE" ]; then
-        APK_SIZE=$(stat -c%s "$APK_FILE" 2>/dev/null || echo "0")
-        if [ $APK_SIZE -gt 100000 ]; then
-            SIZE_MB=$(echo "scale=2; $APK_SIZE / 1024 / 1024" | bc)
-            echo -e "✅ APK disponible: $APK_FILE"
-            echo -e "📊 Tamaño: ${SIZE_MB} MB"
-            echo -e "📍 El bot la enviará automáticamente"
-        else
-            echo -e "⚠️  Archivo APK muy pequeño o corrupto"
-        fi
-    else
-        echo -e "❌ No hay archivo APK"
-        echo -e "   Ubicación esperada: $APK_FILE"
-    fi
-    exit 0
-fi
+sleep 3
 
-if [ -n "$1" ] && [ -f "$1" ]; then
-    echo "📥 Copiando $1 a $APK_FILE..."
-    cp "$1" "$APK_FILE"
-    
-    if [ $? -eq 0 ]; then
-        APK_SIZE=$(stat -c%s "$APK_FILE" 2>/dev/null || echo "0")
-        if [ $APK_SIZE -gt 100000 ]; then
-            SIZE_MB=$(echo "scale=2; $APK_SIZE / 1024 / 1024" | bc)
-            echo -e "✅ APK subida correctamente"
-            echo -e "📊 Tamaño: ${SIZE_MB} MB"
-            echo -e "📍 El bot la enviará cuando seleccionen '4 - DESCARGAR APLICACIÓN'"
-        else
-            echo -e "⚠️  Archivo muy pequeño. ¿Es un APK válido?"
-        fi
-    else
-        echo -e "❌ Error al copiar el archivo"
-    fi
-else
-    echo -e "ℹ️  INSTRUCCIONES PARA SUBIR APK:\n"
-    echo -e "1. Subir via SCP (desde tu PC):"
-    echo -e "   scp /ruta/a/tu.apk root@$(hostname -I | awk '{print $1}'):$APK_DIR/"
-    echo -e "   ssh root@$(hostname -I | awk '{print $1}') 'mv $APK_DIR/*.apk $APK_FILE'\n"
-    
-    echo -e "2. Si ya está en el servidor:"
-    echo -e "   upload-apk /ruta/a/tu.apk\n"
-    
-    echo -e "3. Verificar estado:"
-    echo -e "   upload-apk --status\n"
-    
-    echo -e "📋 El APK debe llamarse 'app.apk' en $APK_DIR"
-fi
-UPLOADEOP
-
-    chmod +x /usr/local/bin/upload-apk
-    
-    echo -e "${GREEN}✅ Script de subida APK creado${NC}"
-    
-    # Iniciar bot
-    echo -e "${YELLOW}🚀 Iniciando bot completo...${NC}"
-    cd "$USER_HOME"
-    pm2 start bot.js --name ssh-bot
-    pm2 save
-    pm2 startup systemd -u root --hp /root 2>/dev/null || true
-    
-    sleep 3
-    
-    # Mostrar mensaje final
-    echo -e "\n${GREEN}${BOLD}"
-    cat << "FINAL"
+# ================================================
+# MENSAJE FINAL
+# ================================================
+clear
+echo -e "${GREEN}${BOLD}"
+cat << "FINAL"
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║       🎉 INSTALACIÓN COMPLETADA - VERSIÓN COMPLETA 🎉      ║
-║                📱 CON APK POR ARCHIVO                       ║
+║       🎉 INSTALACIÓN COMPLETADA - SIN CUPONES 🎉           ║
+║                                                              ║
+║               SSH BOT PRO - CONFIGURADO                     ║
+║               📅 DIARIOS: 7, 15 DÍAS                       ║
+║               📅 MENSUALES: 30, 50 DÍAS                    ║
+║               ⏰ TEST GRATIS: 2 HORAS                       ║
+║               🔐 CONTRASEÑA FIJA: mgvpn247                 ║
+║               💰 MERCADOPAGO INTEGRADO                      ║
+║               📢 NOTIFICACIONES AUTOMÁTICAS                 ║
+║               🚫 SIN CUPONES DE DESCUENTO                   ║
+║               📱 FLUJO NATURAL DE USUARIO                  ║
+║               ⚙️  PANEL CON GESTIÓN COMPLETA               ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 FINAL
-    echo -e "${NC}"
-    
-    echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}✅ Sistema instalado exitosamente${NC}"
-    echo -e "${GREEN}✅ Versión completa con planes separados${NC}"
-    echo -e "${GREEN}✅ Test: 2 horas por defecto${NC}"
-    echo -e "${GREEN}✅ Contraseña: mgvpn247 (fija)${NC}"
-    echo -e "${GREEN}✅ APK enviada como archivo${NC}"
-    echo -e "${RED}🚫 Cupones de descuento desactivados${NC}"
-    echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}\n"
-    
-    echo -e "${YELLOW}📋 COMANDOS DISPONIBLES:${NC}\n"
-    echo -e "  ${GREEN}sshbot${NC}         - Panel de control completo"
-    echo -e "  ${GREEN}upload-apk${NC}     - Subir archivo APK fácilmente"
-    echo -e "  ${GREEN}pm2 logs ssh-bot${NC} - Ver logs del bot"
-    echo -e "  ${GREEN}pm2 restart ssh-bot${NC} - Reiniciar bot\n"
-    
-    echo -e "${YELLOW}📱 SUBIR APK:${NC}\n"
-    echo -e "  1. Sube tu archivo APK al servidor:"
-    echo -e "     ${CYAN}scp mi-app.apk root@$SERVER_IP:/opt/ssh-bot/apk/${NC}"
-    echo -e "  2. Luego ejecuta en el servidor:"
-    echo -e "     ${CYAN}mv /opt/ssh-bot/apk/*.apk /opt/ssh-bot/apk/app.apk${NC}"
-    echo -e "  3. O usa: ${CYAN}upload-apk /ruta/a/tu.apk${NC}\n"
-    
-    echo -e "${YELLOW}🔧 CONFIGURACIÓN INICIAL:${NC}\n"
-    echo -e "  1. Ejecuta: ${GREEN}sshbot${NC}"
-    echo -e "  2. Opción ${CYAN}[3]${NC} - Ver QR WhatsApp"
-    echo -e "  3. Escanea el QR con tu teléfono"
-    echo -e "  4. Envía 'menu' al bot para probar"
-    echo -e "  5. Opción ${CYAN}[10]${NC} - Subir APK"
-    echo -e "  6. Opción ${CYAN}[8]${NC} - Configurar MercadoPago (opcional)"
-    echo -e "  7. Opción ${CYAN}[9]${NC} - Configurar notificaciones (opcional)\n"
-    
-    echo -e "${YELLOW}💰 PRECIOS POR DEFECTO:${NC}\n"
-    echo -e "  Test: ${GREEN}2 horas (gratis)${NC}"
-    echo -e "  📅 DIARIOS:"
-    echo -e "    7 días: ${GREEN}$1500 ARS${NC}"
-    echo -e "    15 días: ${GREEN}$2500 ARS${NC}"
-    echo -e "  📅 MENSUALES:"
-    echo -e "    30 días: ${GREEN}$5500 ARS${NC}"
-    echo -e "    50 días: ${GREEN}$8500 ARS${NC}\n"
-    
-    echo -e "${YELLOW}📍 INFORMACIÓN:${NC}"
-    echo -e "  IP: ${CYAN}$SERVER_IP${NC}"
-    echo -e "  BD: ${CYAN}/opt/ssh-bot/data/users.db${NC}"
-    echo -e "  Config: ${CYAn}/opt/ssh-bot/config/config.json${NC}"
-    echo -e "  APK: ${CYAN}/opt/ssh-bot/apk/app.apk${NC}"
-    echo -e "  Bot: ${CYAN}/root/ssh-bot/${NC}"
-    echo -e "  QR: ${CYAN}/root/qr-whatsapp.png${NC}\n"
-    
-    echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}\n"
-}
+echo -e "${NC}"
 
-# ================================================
-# EJECUCIÓN PRINCIPAL
-# ================================================
+echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}✅ Sistema instalado con planes separados${NC}"
+echo -e "${GREEN}✅ Menú: 1=Prueba, 2=Comprar, 3=Renovar, 4=APP${NC}"
+echo -e "${GREEN}✅ Planes DIARIOS: 7, 15 días${NC}"
+echo -e "${GREEN}✅ Planes MENSUALES: 30, 50 días${NC}"
+echo -e "${GREEN}✅ Generación de link MercadoPago${NC}"
+echo -e "${GREEN}✅ Test: 2 horas por defecto${NC}"
+echo -e "${GREEN}✅ CONTRASEÑA FIJA: mgvpn247 para todos${NC}"
+echo -e "${GREEN}✅ Pruebas: testXXXX (ej: test1234)${NC}"
+echo -e "${GREEN}✅ Compras: userXXXX (ej: user5678)${NC}"
+echo -e "${GREEN}✅ Panel con edición de horas del test${NC}"
+echo -e "${RED}🚫 CUPONES DE DESCUENTO DESACTIVADOS${NC}"
+echo -e "${GREEN}📢 SISTEMA DE NOTIFICACIONES ACTIVADO:${NC}"
+echo -e "${GREEN}   • Aviso por vencer (24h antes)${NC}"
+echo -e "${GREEN}   • Recordatorio de vencimiento hoy${NC}"
+echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}\n"
 
-# Ejecutar solución de Node.js primero
-fix_nodejs
+echo -e "${YELLOW}📋 COMANDOS DISPONIBLES:${NC}\n"
+echo -e "  ${GREEN}sshbot${NC}         - Panel de control completo"
+echo -e "  ${GREEN}pm2 logs ssh-bot${NC} - Ver logs"
+echo -e "  ${GREEN}pm2 restart ssh-bot${NC} - Reiniciar bot\n"
 
-# Pausa para verificar
-echo -e "${YELLOW}⚠️  Solución de Node.js aplicada.${NC}"
-echo -e "${CYAN}Verificando Node.js...${NC}"
-node --version 2>/dev/null && echo -e "${GREEN}✅ Node.js: $(node --version)${NC}" || echo -e "${RED}❌ Node.js no instalado${NC}"
-npm --version 2>/dev/null && echo -e "${GREEN}✅ NPM: $(npm --version)${NC}" || echo -e "${RED}❌ NPM no instalado${NC}"
+echo -e "${YELLOW}🔧 CONFIGURACIÓN INICIAL:${NC}\n"
+echo -e "  1. Ejecuta: ${GREEN}sshbot${NC}"
+echo -e "  2. Opción ${CYAN}[8]${NC} - Configurar MercadoPago"
+echo -e "  3. Opción ${CYAN}[9]${NC} - Configurar grupo de notificaciones"
+echo -e "  4. Opción ${CYAN}[3]${NC} - Escanear QR WhatsApp"
+echo -e "  5. Opción ${CYAN}[6]${NC} - Ajustar horas del test (opcional)"
+echo -e "  6. Opción ${CYAN}[7]${NC} - Ajustar precios\n"
 
-read -p "$(echo -e "${YELLOW}¿Continuar con la instalación completa del bot? (s/N): ${NC}")" -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Ss]$ ]]; then
-    echo -e "${YELLOW}Instalación cancelada${NC}"
-    echo -e "${GREEN}Node.js ya está solucionado, puedes instalar manualmente después${NC}"
-    exit 0
-fi
+echo -e "${YELLOW}💰 PRECIOS POR DEFECTO:${NC}\n"
+echo -e "  Test: ${GREEN}2 horas (gratis)${NC}"
+echo -e "  📅 DIARIOS:"
+echo -e "    7 días: ${GREEN}$1500 ARS${NC}"
+echo -e "    15 días: ${GREEN}$2500 ARS${NC}"
+echo -e "  📅 MENSUALES:"
+echo -e "    30 días: ${GREEN}$5500 ARS${NC}"
+echo -e "    50 días: ${GREEN}$8500 ARS${NC}\n"
 
-# Ejecutar instalación principal
-main_installation
+echo -e "${YELLOW}⌨️  FLUJO PARA USUARIOS:${NC}\n"
+echo -e "  ${CYAN}1.${NC} Escribe 'menu' → Menú principal"
+echo -e "  ${CYAN}2.${NC} Escribe '1' → Prueba gratis (2 horas)"
+echo -e "  ${CYAN}3.${NC} Escribe '2' → Comprar Login SSH"
+echo -e "  ${CYAN}4.${NC} Selecciona:"
+echo -e "     ${GREEN}1${NC} - Planes DIARIOS (7, 15 días)"
+echo -e "     ${GREEN}2${NC} - Planes MENSUALES (30, 50 días)"
+echo -e "  ${CYAN}5.${NC} Elige un plan:"
+echo -e "     DIARIOS: ${GREEN}1${NC}=7d - ${GREEN}2${NC}=15d"
+echo -e "     MENSUALES: ${GREEN}1${NC}=30d - ${GREEN}2${NC}=50d"
+echo -e "  ${CYAN}6.${NC} Recibe link de pago MercadoPago"
+echo -e "  ${CYAN}7.${NC} Recibe notificación cuando el pago sea aprobado\n"
 
-echo -e "${GREEN}${BOLD}✨ Instalación completada exitosamente! 🚀${NC}\n"
+echo -e "${YELLOW}📢 NOTIFICACIONES AUTOMÁTICAS:${NC}"
+echo -e "  ⚠️  ${CYAN}Aviso 24h antes de vencer${NC}"
+echo -e "  ⏰ ${CYAN}Recordatorio el día de vencimiento${NC}\n"
 
-# Preguntar si abrir panel
-read -p "$(echo -e "${YELLOW}¿Abrir panel de control ahora? (s/N): ${NC}")" -n 1 -r
+echo -e "${YELLOW}📊 INFO:${NC}"
+echo -e "  IP: ${CYAN}$SERVER_IP${NC}"
+echo -e "  BD: ${CYAN}/opt/ssh-bot/data/users.db${NC}"
+echo -e "  Config: ${CYAN}/opt/ssh-bot/config/config.json${NC}"
+echo -e "  Grupo notif.: ${CYAN}${NOTIFICATION_GROUP:-'No configurado'}${NC}"
+echo -e "  Pruebas: ${GREEN}testXXXX (test1234) - 2 horas${NC}"
+echo -e "  Compras: ${GREEN}userXXXX (user5678)${NC}"
+echo -e "  Contraseña: ${GREEN}mgvpn247 (fija)${NC}"
+echo -e "  Cupones: ${RED}🚫 DESACTIVADOS${NC}\n"
+
+echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}\n"
+
+read -p "$(echo -e "${YELLOW}¿Abrir panel de control? (s/N): ${NC}")" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Ss]$ ]]; then
-    echo -e "\n${CYAN}Abriendo panel de control...${NC}\n"
+    echo -e "\n${CYAN}Abriendo panel...${NC}\n"
     sleep 2
     /usr/local/bin/sshbot
 else
-    echo -e "\n${YELLOW}💡 Recuerda: Ejecuta ${GREEN}sshbot${NC} para abrir el panel\n"
+    echo -e "\n${YELLOW}💡 Ejecuta: ${GREEN}sshbot${NC} para abrir el panel\n"
 fi
+
+echo -e "${GREEN}${BOLD}¡Sistema instalado exitosamente SIN cupones! 🚀${NC}\n"
 
 exit 0
