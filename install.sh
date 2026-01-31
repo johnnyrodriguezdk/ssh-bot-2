@@ -146,10 +146,10 @@ cat > "$CONFIG_FILE" << EOF
     },
     "prices": {
         "test_hours": 2,
-        "price_7d": 1500.00,
-        "price_15d": 2500.00,
-        "price_30d": 5500.00,
-        "price_50d": 8500.00,
+        "price_7d": 3000.00,
+        "price_15d": 4000.00,
+        "price_30d": 7000.00,
+        "price_50d": 9800.00,
         "currency": "ARS"
     },
     "mercadopago": {
@@ -775,8 +775,11 @@ Elija una opción:
 Elija un plan:
 
 🗓 *1* - 7 DÍAS - $${config.prices.price_7d}
+
 🗓 *2* - 15 DÍAS - $${config.prices.price_15d}
+
 🗓 *3* - 30 DÍAS - $${config.prices.price_30d}
+
 🗓 *4* - 50 DÍAS - $${config.prices.price_50d}
 
 ⬅️ *0* - VOLVER`);
