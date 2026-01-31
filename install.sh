@@ -730,7 +730,7 @@ Elija una opción:
 🔄 *3* - RENOVAR USUARIO SSH
 📱 *4* - DESCARGAR APLICACIÓN
 
-⬅️ *0* - MENU PRINCIPAL`);
+📝 - RESPONDE CON EL NUMERO`);
                 }
                 
                 // ✅ OPCIÓN 1 CORREGIDA - Mensaje claramente de 2 horas
@@ -841,7 +841,7 @@ Elija una opción:
 🔄 *3* - RENOVAR USUARIO SSH
 📱 *4* - DESCARGAR APLICACIÓN
 
-⬅️ *0* - MENU PRINCIPAL`);
+📝 - RESPONDE CON EL NUMERO`);
                     }
                 }
                 
