@@ -146,8 +146,6 @@ cat > "$CONFIG_FILE" << EOF
     },
     "prices": {
         "test_hours": 2,
-        "price_1d": 500.00,
-        "price_3d": 1200.00,
         "price_7d": 1500.00,
         "price_15d": 2500.00,
         "price_30d": 5500.00,
@@ -404,13 +402,7 @@ async function createSSHUser(phone, username, days) {
         
         if (days === 0) {
             // ✅ CORRECCIÓN CRÍTICA: Para que la app muestre 2h
-            // Guardamos 2 horas PERO con un cálculo que la app entienda
-            // La app calcula: días restantes = (expires_at - ahora) / 86400
-            // Si expires_at está en menos de 24h, muestra horas
-            
             const horasTest = config.prices.test_hours || 2;
-            
-            // Para que la app muestre 0 días y horas, ponemos fecha en 2h
             expireFull = moment().add(horasTest, 'hours').format('YYYY-MM-DD HH:mm:ss');
             
             console.log(chalk.cyan(`📅 Test expira: ${expireFull} (${horasTest} horas)`));
@@ -780,51 +772,55 @@ Elija una opción:
     🌐 *PLANES SSH PREMIUM*    
 
 
-Elija una opción:
+Elija un plan:
 
-🗓 *1* - PLANES DIARIOS
-🗓 *2* - PLANES MENSUALES
+🗓 *1* - 7 DÍAS - $${config.prices.price_7d}
+🗓 *2* - 15 DÍAS - $${config.prices.price_15d}
+🗓 *3* - 30 DÍAS - $${config.prices.price_30d}
+🗓 *4* - 50 DÍAS - $${config.prices.price_50d}
 
 ⬅️ *0* - VOLVER`);
                 }
                 
-                // SUBMENÚ DE COMPRAS
+                // SELECCIÓN DE PLAN (solo 7, 15, 30, 50 días)
                 else if (userState.state === 'buying_ssh') {
-                    if (text === '1') {
-                        // PLANES DIARIOS
-                        await setUserState(from, 'selecting_daily_plan');
+                    if (['1', '2', '3', '4'].includes(text)) {
+                        const planMap = {
+                            '1': { days: 7, price: config.prices.price_7d, name: '7 DÍAS' },
+                            '2': { days: 15, price: config.prices.price_15d, name: '15 DÍAS' },
+                            '3': { days: 30, price: config.prices.price_30d, name: '30 DÍAS' },
+                            '4': { days: 50, price: config.prices.price_50d, name: '50 DÍAS' }
+                        };
                         
-                        await client.sendText(from, `
-
-
-      🌐 *PLANES DIARIOS*      
-
-
-Elija un plan:
-
-🗓 *1* - 1 DÍA - $${config.prices.price_1d}
-🗓 *2* - 3 DÍAS - $${config.prices.price_3d}
-🗓 *3* - 7 DÍAS - $${config.prices.price_7d}
-🗓 *4* - 15 DÍAS - $${config.prices.price_15d}
-
-⬅️ *0* - VOLVER`);
-                    }
-                    else if (text === '2') {
-                        // PLANES MENSUALES
-                        await setUserState(from, 'selecting_monthly_plan');
+                        const plan = planMap[text];
                         
-                        await client.sendText(from, `
+                        if (mpEnabled) {
+                            // CON MERCADOPAGO - PREGUNTAR POR DESCUENTO
+                            await setUserState(from, 'asking_discount', { 
+                                plan: plan,
+                                days: plan.days,
+                                amount: plan.price,
+                                planName: plan.name
+                            });
+                            
+                            await client.sendText(from, `**¿Tienes un cupón de descuento?**
+Responde: *sí* o *no*.`);
+                            
+                        } else {
+                            // SIN MERCADOPAGO
+                            await client.sendText(from, `✅ *PLAN SELECCIONADO: ${plan.name}*
 
+💰 *Precio:* $${plan.price} ARS
+⏰ *Duración:* ${plan.days} días
+🔑 *Contraseña:* ${DEFAULT_PASSWORD}
 
-     🌐 *PLANES MENSUALES*     
+📞 *Para continuar con la compra, contacta al administrador:*
+${config.links.support}
 
-
-Elija un plan:
-
-🗓 *1* - 30 DÍAS - $${config.prices.price_30d}
-🗓 *2* - 50 DÍAS - $${config.prices.price_50d}
-
-⬅️ *0* - VOLVER`);
+💸 *O envía el monto por transferencia bancaria.*`);
+                            
+                            await setUserState(from, 'main_menu');
+                        }
                     }
                     else if (text === '0') {
                         await setUserState(from, 'main_menu');
@@ -842,118 +838,6 @@ Elija una opción:
 📱 *4* - DESCARGAR APLICACIÓN
 
 📝 - RESPONDE CON EL NUMERO`);
-                    }
-                }
-                
-                // SELECCIÓN DE PLAN DIARIO
-                else if (userState.state === 'selecting_daily_plan') {
-                    if (['1', '2', '3', '4'].includes(text)) {
-                        const planMap = {
-                            '1': { days: 1, price: config.prices.price_1d, name: '1 DÍA' },
-                            '2': { days: 3, price: config.prices.price_3d, name: '3 DÍAS' },
-                            '3': { days: 7, price: config.prices.price_7d, name: '7 DÍAS' },
-                            '4': { days: 15, price: config.prices.price_15d, name: '15 DÍAS' }
-                        };
-                        
-                        const plan = planMap[text];
-                        
-                        if (mpEnabled) {
-                            // CON MERCADOPAGO - PREGUNTAR POR DESCUENTO
-                            await setUserState(from, 'asking_discount', { 
-                                plan: plan,
-                                days: plan.days,
-                                amount: plan.price,
-                                planName: plan.name
-                            });
-                            
-                            await client.sendText(from, `**¿Tienes un cupón de descuento?**
-Responde: *sí* o *no*.`);
-                            
-                        } else {
-                            // SIN MERCADOPAGO
-                            await client.sendText(from, `✅ *PLAN SELECCIONADO: ${plan.name}*
-
-💰 *Precio:* $${plan.price} ARS
-⏰ *Duración:* ${plan.days} días
-🔑 *Contraseña:* ${DEFAULT_PASSWORD}
-
-📞 *Para continuar con la compra, contacta al administrador:*
-${config.links.support}
-
-💸 *O envía el monto por transferencia bancaria.*`);
-                            
-                            await setUserState(from, 'main_menu');
-                        }
-                    }
-                    else if (text === '0') {
-                        await setUserState(from, 'buying_ssh');
-                        await client.sendText(from, `
-
-
-    🌐 *PLANES SSH PREMIUM*    
-
-
-Elija una opción:
-
-🗓 *1* - PLANES DIARIOS
-🗓 *2* - PLANES MENSUALES
-
-⬅️ *0* - VOLVER AL MENÚ`);
-                    }
-                }
-                
-                // SELECCIÓN DE PLAN MENSUAL
-                else if (userState.state === 'selecting_monthly_plan') {
-                    if (['1', '2'].includes(text)) {
-                        const planMap = {
-                            '1': { days: 30, price: config.prices.price_30d, name: '30 DÍAS' },
-                            '2': { days: 50, price: config.prices.price_50d, name: '50 DÍAS' }
-                        };
-                        
-                        const plan = planMap[text];
-                        
-                        if (mpEnabled) {
-                            // CON MERCADOPAGO - PREGUNTAR POR DESCUENTO
-                            await setUserState(from, 'asking_discount', { 
-                                plan: plan,
-                                days: plan.days,
-                                amount: plan.price,
-                                planName: plan.name
-                            });
-                            
-                            await client.sendText(from, `**¿Tienes un cupón de descuento?**
-Responde: *sí* o *no*.`);
-                            
-                        } else {
-                            // SIN MERCADOPAGO
-                            await client.sendText(from, `✅ *PLAN SELECCIONADO: ${plan.name}*
-
-💰 *Precio:* $${plan.price} ARS
-⏰ *Duración:* ${plan.days} días
-🔑 *Contraseña:* ${DEFAULT_PASSWORD}
-
-📞 *Para continuar con la compra, contacta al administrador:*
-${config.links.support}
-
-💸 *O envía el monto por transferencia bancaria.*`);
-                            
-                            await setUserState(from, 'main_menu');
-                        }
-                    }
-                    else if (text === '0') {
-                        await setUserState(from, 'buying_ssh');
-                        await client.sendText(from, `
-
-
-    🌐 *PLANES SSH PREMIUM*    
-
-
-Elija una opción:
-
-🗓 *1* - PLANES DIARIOS
-🗓 *2* - PLANES MENSUALES
-
-⬅️ *0* - VOLVER`);
                     }
                 }
                 
@@ -1010,13 +894,6 @@ ${config.links.app_download}
 ⚡ *Credenciales por defecto:*
 👤 Usuario: (el que te proporcionamos)
 🔑 Contraseña: ${DEFAULT_PASSWORD}`);
-                }
-                
-                // COMANDO NO RECONOCIDO
-                else {
-                    await client.sendText(from, `❌ *Comando no reconocido.*
-
-Escribe *menu* para ver las opciones disponibles.`);
                 }
                 
             } catch (error) {
@@ -1355,8 +1232,6 @@ while true; do
     
     echo -e "${YELLOW}💰 PRECIOS ACTUALES:${NC}"
     echo -e "  ${CYAN}DIARIOS:${NC}"
-    echo -e "    1 día: $ $(get_val '.prices.price_1d') ARS"
-    echo -e "    3 días: $ $(get_val '.prices.price_3d') ARS"
     echo -e "    7 días: $ $(get_val '.prices.price_7d') ARS"
     echo -e "    15 días: $ $(get_val '.prices.price_15d') ARS"
     echo -e "  ${CYAN}MENSUALES:${NC}"
@@ -1411,7 +1286,7 @@ while true; do
             read -p "Teléfono (ej: 5491122334455): " PHONE
             read -p "Usuario (minúsculas, auto=generar): " USERNAME
             read -p "Tipo (test/premium): " TIPO
-            read -p "Días (0=test 2h, 1,3,7,15,30,50=premium): " DAYS
+            read -p "Días (0=test 2h, 7,15,30,50=premium): " DAYS
             
             [[ -z "$DAYS" ]] && DAYS="30"
             if [[ "$USERNAME" == "auto" || -z "$USERNAME" ]]; then
@@ -1467,8 +1342,6 @@ while true; do
             clear
             echo -e "${CYAN}💰 CAMBIAR PRECIOS${NC}\n"
             
-            CURRENT_1D=$(get_val '.prices.price_1d')
-            CURRENT_3D=$(get_val '.prices.price_3d')
             CURRENT_7D=$(get_val '.prices.price_7d')
             CURRENT_15D=$(get_val '.prices.price_15d')
             CURRENT_30D=$(get_val '.prices.price_30d')
@@ -1476,25 +1349,19 @@ while true; do
             
             echo -e "${YELLOW}Precios actuales:${NC}"
             echo -e "  ${CYAN}DIARIOS:${NC}"
-            echo -e "  1. 1 día: $${CURRENT_1D} ARS"
-            echo -e "  2. 3 días: $${CURRENT_3D} ARS"
-            echo -e "  3. 7 días: $${CURRENT_7D} ARS"
-            echo -e "  4. 15 días: $${CURRENT_15D} ARS"
+            echo -e "  1. 7 días: $${CURRENT_7D} ARS"
+            echo -e "  2. 15 días: $${CURRENT_15D} ARS"
             echo -e "  ${CYAN}MENSUALES:${NC}"
-            echo -e "  5. 30 días: $${CURRENT_30D} ARS"
-            echo -e "  6. 50 días: $${CURRENT_50D} ARS"
+            echo -e "  3. 30 días: $${CURRENT_30D} ARS"
+            echo -e "  4. 50 días: $${CURRENT_50D} ARS"
             echo -e ""
             
             echo -e "${CYAN}Modificar precios:${NC}"
-            read -p "Nuevo precio 1d [${CURRENT_1D}]: " NEW_1D
-            read -p "Nuevo precio 3d [${CURRENT_3D}]: " NEW_3D
             read -p "Nuevo precio 7d [${CURRENT_7D}]: " NEW_7D
             read -p "Nuevo precio 15d [${CURRENT_15D}]: " NEW_15D
             read -p "Nuevo precio 30d [${CURRENT_30D}]: " NEW_30D
             read -p "Nuevo precio 50d [${CURRENT_50D}]: " NEW_50D
             
-            [[ -n "$NEW_1D" ]] && set_val '.prices.price_1d' "$NEW_1D"
-            [[ -n "$NEW_3D" ]] && set_val '.prices.price_3d' "$NEW_3D"
             [[ -n "$NEW_7D" ]] && set_val '.prices.price_7d' "$NEW_7D"
             [[ -n "$NEW_15D" ]] && set_val '.prices.price_15d' "$NEW_15D"
             [[ -n "$NEW_30D" ]] && set_val '.prices.price_30d' "$NEW_30D"
@@ -1584,7 +1451,7 @@ while true; do
             sqlite3 "$DB" "SELECT 'Pendientes: ' || SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) || ' | Aprobados: ' || SUM(CASE WHEN status='approved' THEN 1 ELSE 0 END) || ' | Total: $' || printf('%.2f', SUM(CASE WHEN status='approved' THEN final_amount ELSE 0 END)) FROM payments"
             
             echo -e "\n${YELLOW}📅 DISTRIBUCIÓN:${NC}"
-            sqlite3 "$DB" "SELECT '1 día: ' || SUM(CASE WHEN plan='1d' THEN 1 ELSE 0 END) || ' | 3 días: ' || SUM(CASE WHEN plan='3d' THEN 1 ELSE 0 END) || ' | 7 días: ' || SUM(CASE WHEN plan='7d' THEN 1 ELSE 0 END) || ' | 15 días: ' || SUM(CASE WHEN plan='15d' THEN 1 ELSE 0 END) || ' | 30 días: ' || SUM(CASE WHEN plan='30d' THEN 1 ELSE 0 END) || ' | 50 días: ' || SUM(CASE WHEN plan='50d' THEN 1 ELSE 0 END) FROM payments WHERE status='approved'"
+            sqlite3 "$DB" "SELECT '7 días: ' || SUM(CASE WHEN plan='7d' THEN 1 ELSE 0 END) || ' | 15 días: ' || SUM(CASE WHEN plan='15d' THEN 1 ELSE 0 END) || ' | 30 días: ' || SUM(CASE WHEN plan='30d' THEN 1 ELSE 0 END) || ' | 50 días: ' || SUM(CASE WHEN plan='50d' THEN 1 ELSE 0 END) FROM payments WHERE status='approved'"
             
             echo -e "\n${YELLOW}💸 INGRESOS HOY:${NC}"
             sqlite3 "$DB" "SELECT 'Hoy: $' || printf('%.2f', SUM(CASE WHEN date(created_at) = date('now') THEN final_amount ELSE 0 END)) FROM payments WHERE status='approved'"
@@ -1625,8 +1492,6 @@ while true; do
             
             echo -e "\n${YELLOW}💰 PRECIOS:${NC}"
             echo -e "  ${CYAN}DIARIOS:${NC}"
-            echo -e "  1d: $(get_val '.prices.price_1d') ARS"
-            echo -e "  3d: $(get_val '.prices.price_3d') ARS"
             echo -e "  7d: $(get_val '.prices.price_7d') ARS"
             echo -e "  15d: $(get_val '.prices.price_15d') ARS"
             echo -e "  ${CYAN}MENSUALES:${NC}"
@@ -1701,6 +1566,7 @@ cat << "FINAL"
 ║       💳 Pago automático con QR                           ║
 ║       ✅ TEST 2 HORAS EN APP (CORREGIDO)                  ║
 ║       🔧 Reparador incluido para tests existentes         ║
+║       🗓️  Solo planes: 7, 15, 30, 50 días               ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 FINAL
@@ -1714,7 +1580,7 @@ echo -e "${GREEN}✅ Panel de control completo${NC}"
 echo -e "${GREEN}✅ Pago automático con QR${NC}"
 echo -e "${GREEN}✅ Verificación automática de pagos${NC}"
 echo -e "${GREEN}✅ Estadísticas completas${NC}"
-echo -e "${GREEN}✅ Planes: Diarios (1,3,7,15 días) y Mensuales (30,50 días)${NC}"
+echo -e "${GREEN}✅ Planes: 7, 15, 30, 50 días${NC}"
 echo -e "${GREEN}✅ Contraseña fija: mgvpn247${NC}"
 echo -e "${GREEN}✅ Test: 2 horas de prueba (CORREGIDO PARA APP)${NC}"
 echo -e "${GREEN}✅ Comando fix-test-app para reparar tests existentes${NC}"
