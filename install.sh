@@ -647,8 +647,7 @@ async function checkPendingPayments() {
 📱 INSTALACIÓN:
 1. Descarga la app (Opción 4)
 2. Seleccionar servidor
-3. Ingresar Usuario y Contraseña
-4. ¡Conéctate automáticamente!
+3. ¡Conéctate automáticamente!
 
 🎊 ¡Disfruta del servicio premium!`;
                             
@@ -742,8 +741,8 @@ async function initializeBot() {
 Elija una opción:
 
 🧾 1 - REGISTRAR HWID Y PRUEBA
-💰 2 - COMPRAR USUARIO SSH CON HWID
-🔄 3 - RENOVAR USUARIO SSH
+💰 2 - COMPRAR USUARIO CON HWID
+🔄 3 - RENOVAR USUARIO HWID
 📱 4 - DESCARGAR APLICACIÓN
 🔍 5 - VER MI HWID REGISTRADO`);
                 }
@@ -951,7 +950,7 @@ Elija una opción:
                         // 🌐 PLANES DIARIOS
                         await setUserState(from, 'selecting_daily_plan_hwid');
                         
-                        await client.sendText(from, `🌐 PLANES DIARIOS SSH + HWID
+                        await client.sendText(from, `🌐 PLANES DIARIOS HWID
 
 Elija un plan:
 🗓 1 - 7 DIAS - $${config.prices.price_7d}
@@ -964,7 +963,7 @@ Elija un plan:
                         // 🌐 PLANES MENSUALES
                         await setUserState(from, 'selecting_monthly_plan_hwid');
                         
-                        await client.sendText(from, `🌐 PLANES MENSUALES SSH + HWID
+                        await client.sendText(from, `🌐 PLANES MENSUALES HWID
 
 Elija un plan:
 🗓 1 - 30 DIAS - $${config.prices.price_30d}
@@ -980,8 +979,8 @@ Elija un plan:
 Elija una opción:
 
 🧾 1 - REGISTRAR HWID Y PRUEBA
-💰 2 - COMPRAR USUARIO SSH CON HWID
-🔄 3 - RENOVAR USUARIO SSH
+💰 2 - COMPRAR USUARIO CON HWID
+🔄 3 - RENOVAR USUARIO HWID
 📱 4 - DESCARGAR APLICACIÓN
 🔍 5 - VER MI HWID REGISTRADO`);
                     }
@@ -1071,7 +1070,7 @@ O envía el monto por transferencia bancaria.`);
                     }
                     else if (text === '0') {
                         await setUserState(from, 'buying_ssh_hwid');
-                        await client.sendText(from, `🌐 PLANES SSH PREMIUM + HWID
+                        await client.sendText(from, `🌐 PLANES HWID
 
 Elija una opción:
 🗓 1 - PLANES DIARIOS
