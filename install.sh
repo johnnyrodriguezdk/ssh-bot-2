@@ -28,7 +28,7 @@ cat << "BANNER"
 ║     ╚══════╝╚══════╝╚═╝  ╚═╝    ╚═════╝  ╚═════╝    ╚═╝     ║
 ╠══════════════════════════════════════════════════════════════╣
 ║                                                              ║
-║          🤖 SSH BOT PRO - WPPCONNECT + MERCADOPAGO          ║
+║          🤖 SSH BOT MG - WPPCONNECT + MERCADOPAGO          ║
 ║               📱 WhatsApp API FUNCIONANDO                   ║
 ║               💰 MercadoPago SDK v2.x INTEGRADO            ║
 ║               💳 Pago automático con QR                    ║
@@ -142,7 +142,7 @@ cat > "$CONFIG_FILE" << EOF
         "default_password": "mgvpn247"
     },
     "prices": {
-        "test_hours": 1,
+        "test_hours": 2,
         "price_7d": 3000.00,
         "price_15d": 4000.00,
         "price_30d": 7000.00,
@@ -272,7 +272,7 @@ const execPromise = util.promisify(exec);
 moment.locale('es');
 
 console.log(chalk.cyan.bold('\n╔══════════════════════════════════════════════════════════════╗'));
-console.log(chalk.cyan.bold('║                🤖 SSH BOT PRO - WPPCONNECT + MP              ║'));
+console.log(chalk.cyan.bold('║                🤖 SSH BOT MG - WPPCONNECT + MP              ║'));
 console.log(chalk.cyan.bold('╚══════════════════════════════════════════════════════════════╝\n'));
 
 // Cargar configuración
