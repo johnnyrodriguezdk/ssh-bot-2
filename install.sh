@@ -3,7 +3,7 @@
 # SSH BOT PRO - VERSIÓN HÍBRIDA (MENÚ PROPIO + MP)
 # ================================================
 # CARACTERÍSTICAS:
-# ✅ MERCADOPAGO SDK v2.x (del script martincho247)
+# ✅ MERCADOPAGO SDK v2.x 
 # ✅ MENÚ PROPIO (2 opciones de compra, bot silencioso)
 # ✅ Usuarios terminan en 'j' · Contraseña 12345
 # ✅ Verificación de pagos cada 2 min
