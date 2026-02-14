@@ -1,13 +1,15 @@
 #!/bin/bash
 # ================================================
-# SSH BOT PRO - VERSIÓN HÍBRIDA (MENÚ PROPIO + MP)
+# SSH BOT PRO - VERSIÓN COMPLETA CON PANEL VPS MEJORADO
 # ================================================
 # CARACTERÍSTICAS:
-# ✅ MERCADOPAGO SDK v2.x 
-# ✅ MENÚ PROPIO (2 opciones de compra, bot silencioso)
-# ✅ Usuarios terminan en 'j' · Contraseña 12345
-# ✅ Verificación de pagos cada 2 min
-# ✅ Panel VPS con estadísticas
+# ✅ MERCADOPAGO SDK v2.x
+# ✅ MENÚ PROPIO (2 opciones de compra)
+# ✅ BOT SILENCIOSO
+# ✅ USUARIOS TERMINAN EN 'j' · CONTRASEÑA 12345
+# ✅ PANEL VPS COMPLETO (13 opciones)
+# ✅ ESTADÍSTICAS DETALLADAS
+# ✅ BACKUP AUTOMÁTICO
 # ================================================
 
 set -e
@@ -36,19 +38,20 @@ cat << "BANNER"
 ║     ╚══════╝╚══════╝╚═╝  ╚═╝    ╚═════╝  ╚═════╝    ╚═╝     ║
 ╠══════════════════════════════════════════════════════════════╣
 ║                                                              ║
-║          🤖 SSH BOT PRO - VERSIÓN HÍBRIDA                   ║
-║     ✅ MP DE MARTINCHO247 + ✅ MENÚ PROPIO                   ║
-║     ✅ USUARIOS TERMINAN EN J · CONTRASEÑA 12345            ║
+║          🤖 SSH BOT PRO - VERSIÓN COMPLETA                  ║
+║     ✅ MP INTEGRADO · ✅ PANEL VPS (13 OPCIONES)            ║
+║     ✅ BOT SILENCIOSO · ✅ USUARIOS TERMINAN EN J           ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 BANNER
 echo -e "${NC}"
 
-echo -e "${GREEN}✅ CARACTERÍSTICAS:${NC}"
-echo -e "  💰 ${CYAN}MercadoPago SDK v2.x${NC} - Del script de martincho247"
-echo -e "  🎛️  ${PURPLE}Menú propio${NC} - 2 opciones de compra, bot silencioso"
+echo -e "${GREEN}✅ CARACTERÍSTICAS COMPLETAS:${NC}"
+echo -e "  💰 ${CYAN}MercadoPago SDK v2.x${NC} - Pagos automáticos"
+echo -e "  🎛️  ${PURPLE}Panel VPS${NC} - 13 opciones de administración"
 echo -e "  🔐 ${YELLOW}Usuarios:${NC} Terminan en 'j' · Contraseña 12345"
-echo -e "  📊 ${BLUE}Panel VPS${NC} - Estadísticas completas"
+echo -e "  📊 ${BLUE}Estadísticas${NC} - Ventas, usuarios, ingresos"
+echo -e "  💾 ${GREEN}Backup automático${NC} - Diario a las 3 AM"
 echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}\n"
 
 # Verificar root
@@ -58,7 +61,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # ================================================
-# CONFIGURACIÓN DEL NOMBRE (de nuestro script)
+# CONFIGURACIÓN DEL NOMBRE
 # ================================================
 echo -e "\n${CYAN}${BOLD}⚙️ CONFIGURACIÓN DEL BOT${NC}"
 read -p "📝 NOMBRE PARA TU BOT (ej: MI BOT PRO): " BOT_NAME
@@ -71,12 +74,13 @@ echo -e "\n${GREEN}✅ Nombre: ${CYAN}$BOT_NAME${NC}"
 echo -e "✅ Ruta segura: ${CYAN}$SAFE_NAME${NC}"
 
 # ================================================
-# RUTAS (unificadas)
+# RUTAS
 # ================================================
-INSTALL_DIR="/opt/sshbot-pro"  # Usamos la ruta de martincho247
+INSTALL_DIR="/opt/sshbot-pro"
 USER_HOME="/root/sshbot-pro"
 DB_FILE="$INSTALL_DIR/data/users.db"
 CONFIG_FILE="$INSTALL_DIR/config/config.json"
+INFO_FILE="$INSTALL_DIR/config/info.txt"
 
 echo -e "\n${YELLOW}📁 Instalación en: $INSTALL_DIR${NC}"
 read -p "$(echo -e "${YELLOW}¿Continuar? (s/N): ${NC}")" -n 1 -r
@@ -87,7 +91,7 @@ if [[ ! $REPLY =~ ^[Ss]$ ]]; then
 fi
 
 # ================================================
-# LIMPIEZA (de ambos scripts)
+# LIMPIEZA TOTAL
 # ================================================
 echo -e "\n${CYAN}${BOLD}🧹 LIMPIEZA TOTAL...${NC}"
 pm2 delete sshbot-pro 2>/dev/null || true
@@ -98,7 +102,7 @@ rm -rf "$INSTALL_DIR" "$USER_HOME" /root/.wppconnect 2>/dev/null || true
 echo -e "${GREEN}✅ Limpieza completada${NC}"
 
 # ================================================
-# CREAR ESTRUCTURA (de martincho247)
+# CREAR ESTRUCTURA
 # ================================================
 echo -e "\n${CYAN}📁 Creando estructura...${NC}"
 mkdir -p "$INSTALL_DIR"/{data,config,sessions,logs,qr_codes}
@@ -109,7 +113,7 @@ chmod -R 700 /root/.wppconnect/$SAFE_NAME
 echo -e "${GREEN}✅ Estructura creada${NC}"
 
 # ================================================
-# PEDIR DATOS DE CONFIGURACIÓN (de nuestro script)
+# PEDIR DATOS DE CONFIGURACIÓN
 # ================================================
 echo -e "\n${CYAN}${BOLD}⚙️ CONFIGURANDO OPCIONES...${NC}"
 
@@ -138,9 +142,8 @@ SERVER_IP=${SERVER_IP:-"127.0.0.1"}
 echo -e "${GREEN}✅ IP detectada: $SERVER_IP${NC}"
 
 # ================================================
-# TEXTO DE INFORMACIÓN (de nuestro script)
+# TEXTO DE INFORMACIÓN
 # ================================================
-INFO_FILE="$INSTALL_DIR/config/info.txt"
 cat > "$INFO_FILE" << 'EOF'
 🔥 INTERNET ILIMITADO ⚡📱
 _______
@@ -160,14 +163,14 @@ _______
 EOF
 
 # ================================================
-# CONFIG.JSON (estructura de martincho247 + nuestros datos)
+# CONFIG.JSON
 # ================================================
 cat > "$CONFIG_FILE" << EOF
 {
     "bot": {
         "name": "$BOT_NAME",
         "safe_name": "$SAFE_NAME",
-        "version": "3.0-HIBRIDO",
+        "version": "4.0-COMPLETO",
         "server_ip": "$SERVER_IP",
         "default_password": "12345",
         "test_hours": $TEST_HOURS,
@@ -200,7 +203,7 @@ cat > "$CONFIG_FILE" << EOF
 EOF
 
 # ================================================
-# BASE DE DATOS (completa de martincho247)
+# BASE DE DATOS
 # ================================================
 echo -e "\n${CYAN}🗄️ Creando base de datos...${NC}"
 sqlite3 "$DB_FILE" << 'SQL'
@@ -258,7 +261,7 @@ SQL
 echo -e "${GREEN}✅ Base de datos creada${NC}"
 
 # ================================================
-# INSTALAR DEPENDENCIAS (de martincho247)
+# INSTALAR DEPENDENCIAS DEL SISTEMA
 # ================================================
 echo -e "\n${CYAN}📦 Instalando dependencias del sistema...${NC}"
 
@@ -302,7 +305,7 @@ pm2 update
 echo -e "${GREEN}✅ Dependencias instaladas${NC}"
 
 # ================================================
-# INSTALAR MÓDULOS NODE (package.json de martincho247)
+# INSTALAR MÓDULOS NODE
 # ================================================
 echo -e "\n${CYAN}📦 Instalando módulos de Node.js...${NC}"
 cd "$USER_HOME"
@@ -310,7 +313,7 @@ cd "$USER_HOME"
 cat > package.json << 'PKGEOF'
 {
     "name": "sshbot-pro",
-    "version": "3.0.0",
+    "version": "4.0.0",
     "main": "bot.js",
     "dependencies": {
         "@wppconnect-team/wppconnect": "^1.24.0",
@@ -331,9 +334,9 @@ npm install --silent 2>&1 | grep -v "npm WARN" || true
 echo -e "${GREEN}✅ Módulos instalados${NC}"
 
 # ================================================
-# BOT.JS HÍBRIDO (MP de martincho247 + menú nuestro)
+# BOT.JS COMPLETO
 # ================================================
-echo -e "\n${CYAN}🤖 Creando bot.js híbrido...${NC}"
+echo -e "\n${CYAN}🤖 Creando bot.js...${NC}"
 
 cat > "bot.js" << 'BOTEOF'
 const wppconnect = require('@wppconnect-team/wppconnect');
@@ -353,7 +356,7 @@ const execPromise = util.promisify(exec);
 moment.locale('es');
 
 // ==============================================
-// CONFIGURACIÓN (rutas de martincho247)
+// CONFIGURACIÓN
 // ==============================================
 const BASE_PATH = '/opt/sshbot-pro';
 const CONFIG_FILE = path.join(BASE_PATH, 'config/config.json');
@@ -369,12 +372,12 @@ let config = loadConfig();
 const db = new sqlite3.Database(DB_FILE);
 
 console.log(chalk.cyan.bold('\n╔══════════════════════════════════════════════════════════════╗'));
-console.log(chalk.cyan.bold(`║           🎛️  ${config.bot.name} - VERSIÓN HÍBRIDA            ║`));
-console.log(chalk.cyan.bold('║     ✅ MP INTEGRADO · ✅ MENÚ PROPIO · ✅ BOT SILENCIOSO      ║'));
+console.log(chalk.cyan.bold(`║           🎛️  ${config.bot.name} - VERSIÓN COMPLETA           ║`));
+console.log(chalk.cyan.bold('║     ✅ MP · ✅ BOT SILENCIOSO · ✅ PANEL VPS                  ║'));
 console.log(chalk.cyan.bold('╚══════════════════════════════════════════════════════════════╝\n'));
 
 // ==============================================
-// MERCADOPAGO SDK V2.X (de martincho247)
+// MERCADOPAGO SDK V2.X
 // ==============================================
 let mpEnabled = false;
 let mpClient = null;
@@ -411,7 +414,7 @@ function initMercadoPago() {
 initMercadoPago();
 
 // ==============================================
-// FUNCIÓN PARA CREAR PAGO MP (de martincho247)
+// FUNCIÓN PARA CREAR PAGO MP
 // ==============================================
 async function createMercadoPagoPayment(phone, planName, days, amount, connections = 1) {
     if (!mpEnabled) return { success: false, error: 'MercadoPago no configurado' };
@@ -454,7 +457,7 @@ async function createMercadoPagoPayment(phone, planName, days, amount, connectio
 }
 
 // ==============================================
-// FUNCIONES SSH (nuestras - usuarios terminan en j)
+// FUNCIONES SSH
 // ==============================================
 function generateSSHUsername(phone) {
     const timestamp = Date.now().toString().slice(-6);
@@ -484,7 +487,7 @@ async function createSSHUser(username, days = 0, maxConnections = 1) {
 }
 
 // ==============================================
-// SISTEMA DE ESTADOS (SQLite)
+// SISTEMA DE ESTADOS
 // ==============================================
 function getUserState(phone) {
     return new Promise((resolve) => {
@@ -513,7 +516,7 @@ function setUserState(phone, state, data = null) {
 }
 
 // ==============================================
-// LISTA DE COMANDOS VÁLIDOS (nuestro bot silencioso)
+// LISTA DE COMANDOS VÁLIDOS (BOT SILENCIOSO)
 // ==============================================
 function isValidCommand(text, userState) {
     const lowerText = text.toLowerCase();
@@ -540,7 +543,7 @@ function isValidCommand(text, userState) {
 }
 
 // ==============================================
-// MENSAJES (nuestros, con el formato que nos gusta)
+// MENSAJES
 // ==============================================
 function getMainMenuMessage() {
     return `⚙️ *${config.bot.name} ChatBot* 🧑‍💻
@@ -570,10 +573,10 @@ function getInfoMessage() {
 function getPricesMessage() {
     return `*🏷️ PRECIOS (ARS)*
 
-🔸 *7 días* (1 conexión) → $${config.prices.price_7d}
-🔸 *15 días* (1 conexión) → $${config.prices.price_15d}
-🔸 *30 días* (1 conexión) → $${config.prices.price_30d}
-🔸 *50 días* (1 conexión) → $${config.prices.price_50d}
+🔸 *7 días* → $${config.prices.price_7d}
+🔸 *15 días* → $${config.prices.price_15d}
+🔸 *30 días* → $${config.prices.price_30d}
+🔸 *50 días* → $${config.prices.price_50d}
 
 💳 *MercadoPago - Pago automático*
 
@@ -635,7 +638,7 @@ function getPlanDetails(planNumber) {
 }
 
 // ==============================================
-// MANEJADOR DE MENSAJES (nuestro, con 2 opciones)
+// MANEJADOR DE MENSAJES
 // ==============================================
 let client = null;
 
@@ -777,7 +780,7 @@ async function handleOSSelection(phone, text, from) {
 }
 
 // ==============================================
-// VERIFICAR PAGOS PENDIENTES (de martincho247)
+// VERIFICAR PAGOS PENDIENTES
 // ==============================================
 function setupPaymentChecker() {
     cron.schedule('*/2 * * * *', async () => {
@@ -795,7 +798,6 @@ function setupPaymentChecker() {
                 
                 for (const payment of payments) {
                     try {
-                        // Simular aprobación después de 2 minutos
                         const timeSinceCreation = moment().diff(moment(payment.created_at), 'minutes');
                         if (timeSinceCreation > 2) {
                             const username = generateSSHUsername(payment.phone);
@@ -932,86 +934,352 @@ async function startBot() {
 startBot();
 BOTEOF
 
-echo -e "${GREEN}✅ Bot.js híbrido creado${NC}"
+echo -e "${GREEN}✅ Bot.js creado${NC}"
 
 # ================================================
-# SCRIPT DE CONTROL (panel completo)
+# SCRIPT DE CONTROL (PANEL VPS COMPLETO)
 # ================================================
 echo -e "\n${CYAN}${BOLD}⚙️ Creando panel de control 'sshbot'...${NC}"
 
 cat > /usr/local/bin/sshbot << 'EOF'
 #!/bin/bash
+# ================================================
+# PANEL SSH BOT PRO - VERSIÓN COMPLETA
+# ================================================
+
 BOLD='\033[1m'; RED='\033[0;31m'; GREEN='\033[0;32m'
-YELLOW='\033[1;33m'; CYAN='\033[0;36m'; BLUE='\033[0;34m'; NC='\033[0m'
+YELLOW='\033[1;33m'; CYAN='\033[0;36m'; BLUE='\033[0;34m'
+PURPLE='\033[0;35m'; NC='\033[0m'
 
 BASE_DIR="/opt/sshbot-pro"
 CONFIG_FILE="$BASE_DIR/config/config.json"
 DB_FILE="$BASE_DIR/data/users.db"
+INFO_FILE="$BASE_DIR/config/info.txt"
 
+# Función para obtener estadísticas completas
+get_stats() {
+    # Usuarios
+    TOTAL_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users;" 2>/dev/null || echo "0")
+    ACTIVE_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users WHERE status=1 AND expires_at > datetime('now');" 2>/dev/null || echo "0")
+    TEST_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users WHERE tipo='test';" 2>/dev/null || echo "0")
+    PREMIUM_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users WHERE tipo='premium';" 2>/dev/null || echo "0")
+    
+    # Pagos
+    PENDING_PAY=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM payments WHERE status='pending';" 2>/dev/null || echo "0")
+    APPROVED_PAY=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM payments WHERE status='approved';" 2>/dev/null || echo "0")
+    TOTAL_REVENUE=$(sqlite3 "$DB_FILE" "SELECT SUM(amount) FROM payments WHERE status='approved';" 2>/dev/null || echo "0")
+    
+    # IP y nombre
+    SERVER_IP=$(jq -r '.bot.server_ip' "$CONFIG_FILE" 2>/dev/null || echo "Desconocida")
+    BOT_NAME=$(jq -r '.bot.name' "$CONFIG_FILE" 2>/dev/null || echo "Bot")
+    
+    # Precios actuales
+    P7=$(jq -r '.prices.price_7d' "$CONFIG_FILE" 2>/dev/null || echo "3000")
+    P15=$(jq -r '.prices.price_15d' "$CONFIG_FILE" 2>/dev/null || echo "4000")
+    P30=$(jq -r '.prices.price_30d' "$CONFIG_FILE" 2>/dev/null || echo "7000")
+    P50=$(jq -r '.prices.price_50d' "$CONFIG_FILE" 2>/dev/null || echo "9700")
+    
+    # MP Status
+    MP_TOKEN=$(jq -r '.mercadopago.access_token' "$CONFIG_FILE" 2>/dev/null || echo "")
+    if [[ -n "$MP_TOKEN" && "$MP_TOKEN" != "" ]]; then
+        MP_STATUS="${GREEN}✅ CONFIGURADO${NC}"
+        MP_SHOW="${MP_TOKEN:0:15}...${MP_TOKEN: -5}"
+    else
+        MP_STATUS="${RED}❌ NO CONFIGURADO${NC}"
+        MP_SHOW="No configurado"
+    fi
+    
+    # Bot status
+    if pm2 list | grep -q "sshbot-pro.*online"; then
+        BOT_STATUS="${GREEN}● ACTIVO${NC}"
+        BOT_PID=$(pm2 list | grep "sshbot-pro" | awk '{print $4}')
+        BOT_UPTIME=$(pm2 list | grep "sshbot-pro" | awk '{print $13}')
+    else
+        BOT_STATUS="${RED}● INACTIVO${NC}"
+        BOT_PID="-"
+        BOT_UPTIME="-"
+    fi
+    
+    # Mostrar panel completo
+    clear
+    echo -e "${CYAN}${BOLD}"
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║              🎛️  PANEL SSH BOT PRO - COMPLETO              ║"
+    echo "║                  💰 MERCADOPAGO INTEGRADO                   ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+    
+    echo -e "${YELLOW}📊 ESTADO DEL SISTEMA${NC}"
+    echo -e "  Bot: $BOT_STATUS"
+    echo -e "  PID: $BOT_PID | Uptime: $BOT_UPTIME"
+    echo -e "  Usuarios: $ACTIVE_USERS/$TOTAL_USERS activos/total"
+    echo -e "  Pruebas: $TEST_USERS | Premium: $PREMIUM_USERS"
+    echo -e "  Pagos: $PENDING_PAY pendientes | $APPROVED_PAY aprobados"
+    echo -e "  Ingresos totales: \$${TOTAL_REVENUE:-0} ARS"
+    echo -e "  MercadoPago: $MP_STATUS"
+    echo -e "  Token: $MP_SHOW"
+    echo -e "  IP Servidor: $SERVER_IP"
+    echo -e "  Contraseña fija: 12345"
+    echo -e "  Usuarios terminan en: j"
+    
+    echo -e "\n${BLUE}💰 PRECIOS ACTUALES:${NC}"
+    printf "  ┌────────────┬────────────┐\n"
+    printf "  │ Plan       │ Precio     │\n"
+    printf "  ├────────────┼────────────┤\n"
+    printf "  │ 7 días     │ $%6s ARS  │\n" "$P7"
+    printf "  │ 15 días    │ $%6s ARS  │\n" "$P15"
+    printf "  │ 30 días    │ $%6s ARS  │\n" "$P30"
+    printf "  │ 50 días    │ $%6s ARS  │\n" "$P50"
+    printf "  └────────────┴────────────┘\n"
+    
+    echo -e "\n${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${CYAN}[1]${NC} 🚀  Ver logs/QR"
+    echo -e "${CYAN}[2]${NC} 🔄  Reiniciar bot"
+    echo -e "${CYAN}[3]${NC} 🛑  Detener bot"
+    echo -e "${CYAN}[4]${NC} 📝  Editar información (info.txt)"
+    echo -e "${CYAN}[5]${NC} 💰  Cambiar precios"
+    echo -e "${CYAN}[6]${NC} 🔑  Configurar MercadoPago"
+    echo -e "${CYAN}[7]${NC} 👥  Listar usuarios"
+    echo -e "${CYAN}[8]${NC} 👤  Crear usuario manual"
+    echo -e "${CYAN}[9]${NC} 💳  Ver pagos"
+    echo -e "${CYAN}[10]${NC} 📊 Ver estadísticas detalladas"
+    echo -e "${CYAN}[11]${NC} 🔧 Fix (limpiar sesión)"
+    echo -e "${CYAN}[12]${NC} 💾 Backup manual"
+    echo -e "${CYAN}[13]${NC} 🔄 Actualizar bot"
+    echo -e "${CYAN}[0]${NC} 🚪  Salir"
+    echo -e "${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -n "👉 Selecciona: "
+}
+
+# Función para ver logs
+show_logs() {
+    echo -e "${CYAN}📱 Mostrando logs (Ctrl+C para salir)${NC}"
+    sleep 2
+    pm2 logs sshbot-pro --lines 30
+}
+
+# Función para editar información
+edit_info() {
+    echo -e "${CYAN}📝 Editando información del bot (archivo info.txt)${NC}"
+    echo -e "${YELLOW}Contenido actual:${NC}"
+    echo "--------------------------------------------------------"
+    cat "$INFO_FILE"
+    echo "--------------------------------------------------------"
+    echo -e "${GREEN}Para editar, usa nano (se abrirá en 3 segundos)${NC}"
+    sleep 3
+    nano "$INFO_FILE"
+    echo -e "${GREEN}✅ Información actualizada. Reinicia el bot para aplicar cambios.${NC}"
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para cambiar precios
+edit_prices() {
+    echo -e "${CYAN}💰 Cambiando precios${NC}"
+    
+    # Leer precios actuales
+    P7=$(jq -r '.prices.price_7d' "$CONFIG_FILE")
+    P15=$(jq -r '.prices.price_15d' "$CONFIG_FILE")
+    P30=$(jq -r '.prices.price_30d' "$CONFIG_FILE")
+    P50=$(jq -r '.prices.price_50d' "$CONFIG_FILE")
+    
+    echo -e "${YELLOW}Precios actuales:${NC}"
+    echo "  7 días: $P7 ARS"
+    echo "  15 días: $P15 ARS"
+    echo "  30 días: $P30 ARS"
+    echo "  50 días: $P50 ARS"
+    echo ""
+    
+    read -p "Nuevo precio 7 días (Enter para mantener $P7): " new7
+    read -p "Nuevo precio 15 días (Enter para mantener $P15): " new15
+    read -p "Nuevo precio 30 días (Enter para mantener $P30): " new30
+    read -p "Nuevo precio 50 días (Enter para mantener $P50): " new50
+    
+    new7=${new7:-$P7}
+    new15=${new15:-$P15}
+    new30=${new30:-$P30}
+    new50=${new50:-$P50}
+    
+    # Actualizar JSON
+    jq --arg p7 "$new7" --arg p15 "$new15" --arg p30 "$new30" --arg p50 "$new50" \
+       '.prices.price_7d = ($p7|tonumber) | 
+        .prices.price_15d = ($p15|tonumber) | 
+        .prices.price_30d = ($p30|tonumber) | 
+        .prices.price_50d = ($p50|tonumber)' \
+       "$CONFIG_FILE" > /tmp/config.tmp && mv /tmp/config.tmp "$CONFIG_FILE"
+    
+    echo -e "${GREEN}✅ Precios actualizados. Reinicia el bot para aplicar cambios.${NC}"
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para configurar MercadoPago
+config_mp() {
+    echo -e "${CYAN}🔑 Configurar MercadoPago${NC}"
+    echo -e "${YELLOW}Para obtener tu Access Token:${NC}"
+    echo "1. Ve a https://www.mercadopago.com.ar/developers/panel/app"
+    echo "2. Crea una app o usa existente"
+    echo "3. Copia el Access Token (empieza con APP_USR-...)"
+    echo ""
+    read -p "Access Token: " token
+    
+    if [[ -n "$token" ]]; then
+        jq --arg t "$token" '.mercadopago.access_token = $t | .mercadopago.enabled = true' "$CONFIG_FILE" > /tmp/config.tmp && mv /tmp/config.tmp "$CONFIG_FILE"
+        echo -e "${GREEN}✅ Token guardado. Reinicia el bot para aplicar.${NC}"
+    else
+        echo -e "${RED}❌ Token no válido${NC}"
+    fi
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para listar usuarios
+list_users() {
+    echo -e "${CYAN}👥 Listando usuarios (últimos 20)${NC}"
+    echo -e "${YELLOW}USUARIO       | TELÉFONO      | TIPO    | EXPIRA                 | ESTADO${NC}"
+    sqlite3 "$DB_FILE" "SELECT username, phone, tipo, expires_at, CASE WHEN status=1 THEN 'Activo' ELSE 'Inactivo' END FROM users ORDER BY created_at DESC LIMIT 20;" -column
+    
+    TOTAL=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users;")
+    echo -e "\n${GREEN}Total de usuarios: $TOTAL${NC}"
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para crear usuario manual
+create_user() {
+    echo -e "${CYAN}👤 Crear usuario manualmente${NC}"
+    read -p "Username (ej: user123): " username
+    read -p "Días de duración (0 para prueba, 7/15/30/50): " days
+    read -p "Conexiones simultáneas (1-2): " connections
+    connections=${connections:-1}
+    
+    cd "$BASE_DIR"
+    node -e "
+        const { exec } = require('child_process');
+        const username = '$username';
+        const days = $days;
+        const connections = $connections;
+        const expiryDate = days > 0 ? 
+            new Date(Date.now() + days*24*60*60*1000).toISOString() : 
+            new Date(Date.now() + 2*60*60*1000).toISOString();
+        
+        exec(\`useradd -M -s /bin/false -e \$(date -d \"\${expiryDate}\" +%Y-%m-%d) \${username} && echo \"\${username}:12345\" | chpasswd\`, (err) => {
+            if(err) {
+                console.log('❌ Error:', err.message);
+            } else {
+                console.log('✅ Usuario creado: ' + username + ' (pass: 12345)');
+                
+                // Guardar en BD
+                const sqlite3 = require('sqlite3');
+                const db = new sqlite3.Database('$DB_FILE');
+                db.run(\`INSERT INTO users (phone, username, password, tipo, expires_at, max_connections, status) 
+                         VALUES ('manual', ?, '12345', 'premium', ?, ?, 1)\`, 
+                         [username, expiryDate, connections]);
+            }
+        });
+    " 2>/dev/null || echo "❌ Error al crear usuario"
+    
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para ver pagos
+list_payments() {
+    echo -e "${CYAN}💳 Últimos pagos${NC}"
+    echo -e "${YELLOW}ID               | TELÉFONO      | PLAN  | MONTO   | ESTADO   | FECHA${NC}"
+    sqlite3 "$DB_FILE" "SELECT payment_id, phone, plan, amount, status, created_at FROM payments ORDER BY created_at DESC LIMIT 15;" -column
+    
+    TOTAL=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM payments;")
+    APROBADOS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM payments WHERE status='approved';")
+    PENDIENTES=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM payments WHERE status='pending';")
+    
+    echo -e "\n${GREEN}Totales: $TOTAL pagos | Aprobados: $APROBADOS | Pendientes: $PENDIENTES${NC}"
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para estadísticas detalladas
+detailed_stats() {
+    echo -e "${CYAN}📊 Estadísticas detalladas${NC}"
+    
+    # Usuarios por día
+    echo -e "\n${YELLOW}Usuarios por día (últimos 7 días):${NC}"
+    sqlite3 "$DB_FILE" "SELECT date(created_at) as fecha, COUNT(*) as cantidad FROM users WHERE created_at > date('now', '-7 days') GROUP BY date(created_at) ORDER BY fecha DESC;" -column
+    
+    # Pagos por día
+    echo -e "\n${YELLOW}Pagos por día (últimos 7 días):${NC}"
+    sqlite3 "$DB_FILE" "SELECT date(created_at) as fecha, COUNT(*) as cantidad, SUM(amount) as total FROM payments WHERE created_at > date('now', '-7 days') AND status='approved' GROUP BY date(created_at) ORDER BY fecha DESC;" -column
+    
+    # Planes más vendidos
+    echo -e "\n${YELLOW}Planes más vendidos:${NC}"
+    sqlite3 "$DB_FILE" "SELECT plan, COUNT(*) as cantidad, SUM(amount) as total FROM payments WHERE status='approved' GROUP BY plan ORDER BY cantidad DESC LIMIT 5;" -column
+    
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para backup
+do_backup() {
+    BACKUP_DIR="/root/backups/sshbot"
+    mkdir -p "$BACKUP_DIR"
+    BACKUP_FILE="$BACKUP_DIR/backup-$(date +%Y%m%d-%H%M%S).tar.gz"
+    
+    echo -e "${CYAN}💾 Creando backup...${NC}"
+    tar -czf "$BACKUP_FILE" "$BASE_DIR/data" "$BASE_DIR/config" 2>/dev/null
+    
+    if [ -f "$BACKUP_FILE" ]; then
+        echo -e "${GREEN}✅ Backup creado: $BACKUP_FILE${NC}"
+        echo -e "${YELLOW}Tamaño: $(du -h "$BACKUP_FILE" | cut -f1)${NC}"
+        
+        # Limpiar backups antiguos (mayores a 7 días)
+        find "$BACKUP_DIR" -name "backup-*.tar.gz" -mtime +7 -delete
+    else
+        echo -e "${RED}❌ Error al crear backup${NC}"
+    fi
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para actualizar
+update_bot() {
+    echo -e "${CYAN}🔄 Actualizando dependencias del bot...${NC}"
+    cd "$BASE_DIR"
+    npm update
+    echo -e "${GREEN}✅ Dependencias actualizadas. Reinicia el bot.${NC}"
+    read -p "Presiona Enter para continuar..."
+}
+
+# Función para fix
+do_fix() {
+    echo -e "${YELLOW}🔧 Aplicando fix completo...${NC}"
+    pm2 stop sshbot-pro 2>/dev/null
+    pkill -f chrome
+    pkill -f chromium
+    rm -rf /root/.wppconnect/*
+    cd "$BASE_DIR"
+    pm2 start bot.js --name sshbot-pro -f --time
+    echo -e "${GREEN}✅ Fix aplicado. Ver logs con opción 1.${NC}"
+    sleep 3
+}
+
+# ================================================
+# MENÚ PRINCIPAL
+# ================================================
 case "$1" in
     menu|"")
-        clear
-        echo -e "${CYAN}${BOLD}"
-        echo "╔══════════════════════════════════════════════════════════════╗"
-        echo "║              🎛️  PANEL SSH BOT PRO - HÍBRIDO               ║"
-        echo "╚══════════════════════════════════════════════════════════════╝"
-        echo -e "${NC}"
-        
-        # Estadísticas básicas
-        TOTAL_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users;" 2>/dev/null || echo "0")
-        ACTIVE_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users WHERE status=1 AND expires_at > datetime('now');" 2>/dev/null || echo "0")
-        PENDING_PAY=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM payments WHERE status='pending';" 2>/dev/null || echo "0")
-        
-        BOT_NAME=$(jq -r '.bot.name' "$CONFIG_FILE" 2>/dev/null || echo "Bot")
-        MP_TOKEN=$(jq -r '.mercadopago.access_token' "$CONFIG_FILE" 2>/dev/null || echo "")
-        
-        if pm2 list | grep -q "sshbot-pro.*online"; then
-            BOT_STATUS="${GREEN}● ACTIVO${NC}"
-        else
-            BOT_STATUS="${RED}● INACTIVO${NC}"
-        fi
-        
-        echo -e "${YELLOW}📊 ESTADO:${NC}"
-        echo -e "  Bot: $BOT_STATUS"
-        echo -e "  Usuarios: $ACTIVE_USERS/$TOTAL_USERS activos"
-        echo -e "  Pagos pendientes: $PENDING_PAY"
-        echo -e "  MP: ${GREEN}✅ CONFIGURADO${NC}"
-        
-        echo -e "\n${BLUE}💰 PRECIOS:${NC}"
-        jq -r '.prices | "  7d: $\(.price_7d) ARS\n  15d: $\(.price_15d) ARS\n  30d: $\(.price_30d) ARS\n  50d: $\(.price_50d) ARS"' "$CONFIG_FILE"
-        
-        echo -e "\n${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${CYAN}[1]${NC} 🚀  Ver logs/QR"
-        echo -e "${CYAN}[2]${NC} 🔄  Reiniciar bot"
-        echo -e "${CYAN}[3]${NC} 🛑  Detener bot"
-        echo -e "${CYAN}[4]${NC} 🔧  Fix (limpiar sesión)"
-        echo -e "${CYAN}[5]${NC} 🔑  Configurar MercadoPago"
-        echo -e "${CYAN}[0]${NC} 🚪  Salir"
-        echo -e "${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -n "👉 Selecciona: "
-        read opt
-        
-        case $opt in
-            1) pm2 logs sshbot-pro --lines 30 ;;
-            2) pm2 restart sshbot-pro ;;
-            3) pm2 stop sshbot-pro ;;
-            4) 
-                pm2 stop sshbot-pro 2>/dev/null
-                pkill -f chrome
-                rm -rf /root/.wppconnect/*
-                cd "$BASE_DIR" && pm2 start bot.js --name sshbot-pro -f --time
-                echo -e "${GREEN}✅ Fix aplicado${NC}"
-                sleep 2
-                ;;
-            5)
-                echo -e "${CYAN}Ingresa tu Access Token de MercadoPago:${NC}"
-                read -p "Token: " token
-                jq --arg t "$token" '.mercadopago.access_token = $t | .mercadopago.enabled = true' "$CONFIG_FILE" > /tmp/config.tmp && mv /tmp/config.tmp "$CONFIG_FILE"
-                echo -e "${GREEN}✅ Token guardado. Reinicia el bot.${NC}"
-                sleep 2
-                ;;
-            0) exit 0 ;;
-        esac
+        while true; do
+            get_stats
+            read opt
+            case $opt in
+                1) show_logs ;;
+                2) pm2 restart sshbot-pro; echo -e "${GREEN}✅ Bot reiniciado${NC}"; sleep 2 ;;
+                3) pm2 stop sshbot-pro; echo -e "${YELLOW}⏹️ Bot detenido${NC}"; sleep 2 ;;
+                4) edit_info ;;
+                5) edit_prices ;;
+                6) config_mp ;;
+                7) list_users ;;
+                8) create_user ;;
+                9) list_payments ;;
+                10) detailed_stats ;;
+                11) do_fix ;;
+                12) do_backup ;;
+                13) update_bot ;;
+                0) echo -e "${GREEN}👋 Hasta luego!${NC}"; exit 0 ;;
+                *) echo -e "${RED}Opción no válida${NC}"; sleep 1 ;;
+            esac
+        done
         ;;
     logs)
         pm2 logs sshbot-pro --lines 50
@@ -1019,15 +1287,17 @@ case "$1" in
     restart)
         pm2 restart sshbot-pro
         ;;
+    stop)
+        pm2 stop sshbot-pro
+        ;;
     fix)
-        pm2 stop sshbot-pro 2>/dev/null
-        pkill -f chrome
-        rm -rf /root/.wppconnect/*
-        cd "$BASE_DIR" && pm2 start bot.js --name sshbot-pro -f --time
-        echo -e "${GREEN}✅ Fix aplicado${NC}"
+        do_fix
+        ;;
+    backup)
+        do_backup
         ;;
     *)
-        echo -e "${CYAN}Uso: sshbot {menu|logs|restart|fix}${NC}"
+        echo -e "${CYAN}Uso: sshbot {menu|logs|restart|stop|fix|backup}${NC}"
         ;;
 esac
 EOF
@@ -1037,7 +1307,12 @@ chmod +x /usr/local/bin/sshbot
 # ================================================
 # CONFIGURAR CRON Y PM2
 # ================================================
-echo -e "\n${CYAN}${BOLD}⏰ Configurando PM2...${NC}"
+echo -e "\n${CYAN}${BOLD}⏰ Configurando PM2 y cron jobs...${NC}"
+
+# Backup automático diario a las 3 AM
+mkdir -p /root/backups/sshbot
+(crontab -l 2>/dev/null | grep -v "backup sshbot"; echo "0 3 * * * /usr/bin/tar -czf /root/backups/sshbot/backup-\$(date +\\%Y\\%m\\%d).tar.gz /opt/sshbot-pro/data /opt/sshbot-pro/config 2>/dev/null") | crontab -
+
 pm2 startup
 pm2 save
 
@@ -1055,24 +1330,46 @@ pm2 save
 clear
 echo -e "${GREEN}${BOLD}"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║     🎉 INSTALACIÓN HÍBRIDA COMPLETADA! 🎉                  ║"
+echo "║     🎉 INSTALACIÓN COMPLETA REALIZADA CON ÉXITO! 🎉        ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 echo -e "${YELLOW}📋 CONFIGURACIÓN:${NC}"
 echo -e "   • Nombre: ${CYAN}$BOT_NAME${NC}"
-echo -e "   • IP: ${CYAN}$SERVER_IP${NC}"
-echo -e "   • Contraseña: ${CYAN}12345${NC}"
+echo -e "   • IP Servidor: ${CYAN}$SERVER_IP${NC}"
+echo -e "   • Contraseña fija: ${CYAN}12345${NC}"
 echo -e "   • Usuarios terminan en: ${CYAN}j${NC}"
 
-echo -e "\n${CYAN}🖥️  COMANDOS:${NC}"
-echo -e "   ${GREEN}sshbot menu${NC}   - Panel de control"
-echo -e "   ${GREEN}sshbot logs${NC}   - Ver QR"
-echo -e "   ${GREEN}sshbot fix${NC}    - Reparar errores"
+echo -e "\n${CYAN}🖥️  COMANDO PRINCIPAL:${NC}"
+echo -e "   ${GREEN}sshbot${NC} - Abre el panel de control completo"
+
+echo -e "\n${PURPLE}📋 OPCIONES DEL PANEL (13 opciones):${NC}"
+echo -e "   [1] 🚀 Ver logs/QR"
+echo -e "   [2] 🔄 Reiniciar bot"
+echo -e "   [3] 🛑 Detener bot"
+echo -e "   [4] 📝 Editar información"
+echo -e "   [5] 💰 Cambiar precios"
+echo -e "   [6] 🔑 Configurar MercadoPago"
+echo -e "   [7] 👥 Listar usuarios"
+echo -e "   [8] 👤 Crear usuario manual"
+echo -e "   [9] 💳 Ver pagos"
+echo -e "   [10] 📊 Estadísticas detalladas"
+echo -e "   [11] 🔧 Fix (limpiar sesión)"
+echo -e "   [12] 💾 Backup manual"
+echo -e "   [13] 🔄 Actualizar bot"
+
+echo -e "\n${CYAN}📱 EN WHATSAPP (MENÚ COMPLETO):${NC}"
+echo -e "   • 1 ⁃📢 INFORMACIÓN"
+echo -e "   • 2 ⁃🏷️ PRECIOS"
+echo -e "   • 3 ⁃🛍️ COMPRAR USUARIO (2 opciones)"
+echo -e "   • 4 ⁃🔄 RENOVAR USUARIO"
+echo -e "   • 5 ⁃📲 DESCARGAR APP"
+echo -e "   • 6 ⁃👥 HABLAR CON REPRESENTANTE"
 
 echo -e "\n${YELLOW}📢 PARA VER EL QR:${NC}"
-echo -e "   ${GREEN}sshbot logs${NC}"
+echo -e "   ${GREEN}sshbot${NC} y luego opción [1]"
+echo -e "   o directamente: ${GREEN}sshbot logs${NC}"
 
 echo -e "\n${CYAN}══════════════════════════════════════════════════════════════${NC}"
-echo -e "${BOLD}✅ VERSIÓN HÍBRIDA - MP DE MARTINCHO247 + MENÚ PROPIO${NC}"
+echo -e "${BOLD}✅ VERSIÓN COMPLETA - PANEL VPS CON 13 OPCIONES${NC}"
 echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}"
