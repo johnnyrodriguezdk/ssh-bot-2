@@ -418,8 +418,16 @@ initMercadoPago();
 // ==============================================
 async function createMercadoPagoPayment(phone, planName, days, amount, connections = 1) {
     if (!mpEnabled) return { success: false, error: 'MercadoPago no configurado' };
+    
     try {
         const paymentId = `MP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        // IMPORTANTE: back_urls debe ser un OBJETO, NO un array
+        const backUrls = {
+            success: `https://wa.me/${phone.replace('+', '')}?text=Pago+aprobado+${paymentId}`,
+            failure: `https://wa.me/${phone.replace('+', '')}?text=Pago+rechazado+${paymentId}`,
+            pending: `https://wa.me/${phone.replace('+', '')}?text=Pago+pendiente+${paymentId}`
+        };
         
         const preferenceData = {
             items: [{
@@ -429,14 +437,21 @@ async function createMercadoPagoPayment(phone, planName, days, amount, connectio
                 currency_id: 'ARS',
                 unit_price: parseFloat(amount)
             }],
-            payer: { phone: { number: phone.replace('+', '') } },
+            payer: { 
+                phone: { 
+                    number: phone.replace('+', '') 
+                } 
+            },
             payment_methods: {
                 excluded_payment_types: [{ id: 'atm' }],
                 installments: 1
             },
-            external_reference: paymentId,
-            auto_return: 'approved'
+            back_urls: backUrls,        // ← OBJETO, no array
+            auto_return: 'approved',     // ← Solo funciona si back_urls está bien definido
+            external_reference: paymentId
         };
+        
+        console.log(chalk.cyan('📤 Enviando a MP:'), JSON.stringify(preferenceData, null, 2));
         
         const preference = await mpPreference.create({ body: preferenceData });
         
@@ -450,12 +465,21 @@ async function createMercadoPagoPayment(phone, planName, days, amount, connectio
         );
         
         return { success: true, paymentId, paymentUrl: preference.init_point, qrCode: qrPath };
+        
     } catch (error) {
-        console.error('Error creando pago MP:', error);
-        return { success: false, error: error.message };
+        console.error(chalk.red('❌ Error detallado MP:'), error.response?.data || error.message);
+        
+        // Mensaje más amigable para el usuario
+        let userMessage = 'Error al generar pago.';
+        if (error.message.includes('back_urls')) {
+            userMessage = 'Configuración incorrecta de URLs de retorno. Contacta al administrador.';
+        } else if (error.message.includes('access_token')) {
+            userMessage = 'Token de MercadoPago inválido. Reconfigúralo en el panel.';
+        }
+        
+        return { success: false, error: userMessage };
     }
 }
-
 // ==============================================
 // FUNCIONES SSH
 // ==============================================
